@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Attendance Report</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        /* DATE FILTER */
+
+        .filter-box {
+            text-align: center;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .filter-box label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .filter-box input {
+            padding: 9px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+
+        .filter-btn {
+            padding: 9px 18px;
+            margin-left: 8px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .filter-btn:hover {
+            background: #0056b3;
+        }
+
+        .all-btn {
+            display: inline-block;
+            padding: 9px 18px;
+            margin-left: 8px;
+            background: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .all-btn:hover {
+            background: #545b62;
+        }
+
+        /* SUMMARY */
+
+        .summary {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .summary-card {
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .present-card {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .absent-card {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .summary-card h2 {
+            margin: 0;
+        }
+
+        .summary-card p {
+            margin: 5px 0 0;
+        }
+
+        /* TABLE */
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background: #333;
+            color: white;
+        }
+
+        .present {
+            color: green;
+            font-weight: bold;
+        }
+
+        .absent {
+            color: red;
+            font-weight: bold;
+        }
+
+        .no-record {
+            text-align: center;
+            padding: 25px;
+            color: #777;
+        }
+
+        /* BACK BUTTON */
+
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 700px) {
+
+            .container {
+                width: 95%;
+                padding: 15px;
+            }
+
+            .summary {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .filter-box input {
+                margin-bottom: 10px;
+            }
+
+            .filter-btn,
+            .all-btn {
+                margin-top: 5px;
+            }
+
+            table {
+                font-size: 13px;
+            }
+
+            th,
+            td {
+                padding: 8px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <h1>📊 Attendance Report</h1>
+
+
+    <!-- =========================
+         DATE FILTER
+         ========================= -->
+
+    <div class="filter-box">
+
+        <form method="GET" action="/attendance-report">
+
+            <label>
+                📅 Select Date:
+            </label>
+
+            <input
+                type="date"
+                name="date"
+                value="{{ selected_date }}"
+            >
+
+            <button type="submit" class="filter-btn">
+                View Report
+            </button>
+
+            <a href="/attendance-report" class="all-btn">
+                Show All
+            </a>
+
+        </form>
+
+    </div>
+
+
+    <!-- =========================
+         SUMMARY
+         ========================= -->
+
+    {% if selected_date %}
+
+    <div class="summary">
+
+        <div class="summary-card present-card">
+
+            <h2>✅ {{ present_count }}</h2>
+
+            <p>Present</p>
+
+        </div>
+
+
+        <div class="summary-card absent-card">
+
+            <h2>❌ {{ absent_count }}</h2>
+
+            <p>Absent</p>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- =========================
+         ATTENDANCE TABLE
+         ========================= -->
+
+    <table>
+
+        <tr>
+
+            <th>Roll No</th>
+
+            <th>Student Name</th>
+
+            <th>Date</th>
+
+            <th>Status</th>
+
+        </tr>
+
+
+        {% for record in attendance %}
+
+        <tr>
+
+            <td>
+                {{ record[0] }}
+            </td>
+
+            <td>
+                {{ record[1] }}
+            </td>
+
+            <td>
+                {{ record[2] }}
+            </td>
+
+            <td>
+
+                {% if record[3] == "Present" %}
+
+                    <span class="present">
+                        ✅ Present
+                    </span>
+
+                {% else %}
+
+                    <span class="absent">
+                        ❌ Absent
+                    </span>
+
+                {% endif %}
+
+            </td>
+
+        </tr>
+
+        {% else %}
+
+        <tr>
+
+            <td colspan="4" class="no-record">
+
+                No attendance records found for this date.
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+
+    <!-- =========================
+         BACK BUTTON
+         ========================= -->
+
+    <a href="/teacher-dashboard" class="back">
+        ← Back to Teacher Dashboard
+    </a>
+
+</div>
+
+</body>
+
+</html>

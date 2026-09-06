@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Edit Student</title>
+
+```
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f6f8;
+        margin: 0;
+    }
+
+    .container {
+        width: 450px;
+        margin: 50px auto;
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    label {
+        display: block;
+        margin-top: 15px;
+        font-weight: bold;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 7px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    .update-btn {
+        width: 100%;
+        padding: 12px;
+        margin-top: 25px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .update-btn:hover {
+        background: #0056b3;
+    }
+
+    .back {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+        color: #007bff;
+        text-decoration: none;
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+<div class="container">
+
+```
+<h1>✏️ Edit Student</h1>
+
+<form method="POST">
+
+    <label>Student Name</label>
+
+    <input
+        type="text"
+        name="name"
+        value="{{ student[3] }}"
+        required
+    >
+
+
+    <label>Roll Number</label>
+
+    <input
+        type="text"
+        name="roll_no"
+        value="{{ student[4] }}"
+        required
+    >
+
+
+    <label>Username</label>
+
+    <input
+        type="text"
+        name="username"
+        value="{{ student[1] }}"
+        required
+    >
+
+
+    <label>Password</label>
+
+    <input
+        type="text"
+        name="password"
+        value="{{ student[2] }}"
+        required
+    >
+
+
+    <button type="submit" class="update-btn">
+        Update Student
+    </button>
+
+</form>
+
+
+<a href="/manage-students" class="back">
+    ← Back to Manage Students
+</a>
+```
+
+</div>
+
+</body>
+</html>

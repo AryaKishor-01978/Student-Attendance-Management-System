@@ -1,0 +1,175 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+        }
+
+        .header {
+            background: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            width: 85%;
+            margin: 30px auto;
+        }
+
+        .welcome {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.1);
+        }
+
+        .cards {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: white;
+            width: 200px;
+            padding: 25px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            margin: 10px 0;
+        }
+
+        .attendance-table {
+            background: white;
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background: #333;
+            color: white;
+        }
+
+        .present {
+            color: green;
+            font-weight: bold;
+        }
+
+        .absent {
+            color: red;
+            font-weight: bold;
+        }
+
+        .logout {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #dc3545;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1>Student Attendance Dashboard</h1>
+</div>
+
+<div class="container">
+
+    <div class="welcome">
+        <h2>Welcome, {{ student[3] }}</h2>
+<p><strong>Roll Number:</strong> {{ student[4] }}</p>
+    </div>
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>Total Classes</h3>
+            <h2>{{ total_classes }}</h2>
+        </div>
+
+        <div class="card">
+            <h3>Present</h3>
+            <h2>{{ present }}</h2>
+        </div>
+
+        <div class="card">
+            <h3>Absent</h3>
+            <h2>{{ absent }}</h2>
+        </div>
+
+        <div class="card">
+            <h3>Attendance</h3>
+            <h2>{{ percentage }}%</h2>
+        </div>
+
+    </div>
+
+    <div class="attendance-table">
+
+        <h2>Attendance History</h2>
+
+        <table>
+
+            <tr>
+                <th>Date</th>
+                <th>Status</th>
+            </tr>
+
+            {% for record in attendance %}
+
+            <tr>
+                <td>{{ record[0] }}</td>
+
+                {% if record[1] == "Present" %}
+                    <td class="present">Present</td>
+                {% else %}
+                    <td class="absent">Absent</td>
+                {% endif %}
+
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+    </div>
+
+    <div style="text-align:center;">
+        <a href="/" class="logout">Logout</a>
+    </div>
+
+</div>
+
+</body>
+</html>
+```
