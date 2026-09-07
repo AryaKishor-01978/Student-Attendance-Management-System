@@ -1,175 +1,743 @@
 ```html
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Student Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Dashboard | Attendance Management System</title>
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
+
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
         }
 
-        .header {
-            background: #333;
-            color: white;
-            padding: 20px;
-            text-align: center;
+        body {
+            background: linear-gradient(135deg, #eef2ff, #f8fafc);
+            min-height: 100vh;
+            color: #1e293b;
         }
+
+        /* ================= NAVBAR ================= */
+
+        .navbar {
+            background: #1e3a8a;
+            color: white;
+            padding: 16px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .logo {
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 9px 14px;
+            border-radius: 7px;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .logout {
+            background: #dc2626;
+        }
+
+        .logout:hover {
+            background: #b91c1c !important;
+        }
+
+        /* ================= MAIN ================= */
 
         .container {
-            width: 85%;
-            margin: 30px auto;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
         }
 
-        .welcome {
+        /* ================= WELCOME ================= */
+
+        .welcome-card {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            color: white;
+            border-radius: 18px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(30, 58, 138, 0.20);
+        }
+
+        .welcome-card h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .welcome-card p {
+            font-size: 15px;
+            opacity: 0.9;
+        }
+
+        .student-details {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .detail-item {
+            background: rgba(255,255,255,0.12);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        /* ================= STAT CARDS ================= */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
             background: white;
-            padding: 20px;
+            border-radius: 14px;
+            padding: 22px;
+            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .stat-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .blue {
+            background: #dbeafe;
+        }
+
+        .green {
+            background: #dcfce7;
+        }
+
+        .red {
+            background: #fee2e2;
+        }
+
+        .purple {
+            background: #ede9fe;
+        }
+
+        .stat-info h3 {
+            font-size: 24px;
+            color: #1e293b;
+            margin-bottom: 3px;
+        }
+
+        .stat-info p {
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        /* ================= ATTENDANCE PERCENTAGE ================= */
+
+        .percentage-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08);
+        }
+
+        .percentage-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .percentage-header h2 {
+            font-size: 19px;
+            color: #1e293b;
+        }
+
+        .percentage-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 14px;
+            background: #e2e8f0;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            width: {{ percentage }}%;
+            background: #2563eb;
+            border-radius: 20px;
+            transition: width 0.5s ease;
+        }
+
+        .percentage-note {
+            margin-top: 12px;
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        /* ================= WARNING ================= */
+
+        .warning-box {
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+            color: #9a3412;
+            padding: 15px 18px;
             border-radius: 10px;
             margin-bottom: 25px;
-            box-shadow: 0 0 8px rgba(0,0,0,0.1);
+            font-size: 14px;
         }
 
-        .cards {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
+        .good-box {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            padding: 15px 18px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-size: 14px;
         }
 
-        .card {
+        /* ================= ATTENDANCE HISTORY ================= */
+
+        .history-card {
             background: white;
-            width: 200px;
+            border-radius: 16px;
             padding: 25px;
-            text-align: center;
-            border-radius: 10px;
-            box-shadow: 0 0 8px rgba(0,0,0,0.1);
+            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08);
+            overflow-x: auto;
         }
 
-        .card h2 {
-            margin: 10px 0;
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
 
-        .attendance-table {
-            background: white;
-            padding: 20px;
-            margin-top: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 8px rgba(0,0,0,0.1);
+        .history-header h2 {
+            font-size: 20px;
+            color: #1e293b;
+        }
+
+        .history-header span {
+            font-size: 13px;
+            color: #64748b;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 12px;
-            border: 1px solid #ddd;
-            text-align: center;
+            min-width: 500px;
         }
 
         th {
-            background: #333;
-            color: white;
+            background: #f1f5f9;
+            color: #334155;
+            padding: 13px;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        td {
+            padding: 13px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        /* ================= STATUS ================= */
+
+        .status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
         }
 
         .present {
-            color: green;
-            font-weight: bold;
+            background: #dcfce7;
+            color: #166534;
         }
 
         .absent {
-            color: red;
-            font-weight: bold;
+            background: #fee2e2;
+            color: #991b1b;
         }
 
-        .logout {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: #dc3545;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
+        /* ================= EMPTY STATE ================= */
+
+        .empty {
+            text-align: center;
+            padding: 45px 20px;
+            color: #64748b;
         }
+
+        .empty-icon {
+            font-size: 45px;
+            margin-bottom: 12px;
+        }
+
+        .empty h3 {
+            color: #334155;
+            margin-bottom: 6px;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            text-align: center;
+            color: #64748b;
+            font-size: 13px;
+            padding: 30px 20px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 900px) {
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 650px) {
+
+            .navbar {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .container {
+                margin: 25px auto;
+            }
+
+            .welcome-card {
+                padding: 25px 20px;
+            }
+
+            .welcome-card h1 {
+                font-size: 23px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .student-details {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .percentage-card,
+            .history-card {
+                padding: 20px;
+            }
+
+        }
+
     </style>
+
 </head>
 
 <body>
 
-<div class="header">
-    <h1>Student Attendance Dashboard</h1>
-</div>
 
-<div class="container">
+    <!-- ================= NAVBAR ================= -->
 
-    <div class="welcome">
-        <h2>Welcome, {{ student[3] }}</h2>
-<p><strong>Roll Number:</strong> {{ student[4] }}</p>
-    </div>
+    <nav class="navbar">
 
-    <div class="cards">
-
-        <div class="card">
-            <h3>Total Classes</h3>
-            <h2>{{ total_classes }}</h2>
+        <div class="logo">
+            📚 Attendance Management System
         </div>
 
-        <div class="card">
-            <h3>Present</h3>
-            <h2>{{ present }}</h2>
+        <div class="nav-links">
+
+            <a href="/">
+                🏠 Home
+            </a>
+
+            <a href="/student-login" class="logout">
+                🚪 Logout
+            </a>
+
         </div>
 
-        <div class="card">
-            <h3>Absent</h3>
-            <h2>{{ absent }}</h2>
+    </nav>
+
+
+    <!-- ================= MAIN CONTAINER ================= -->
+
+    <div class="container">
+
+
+        <!-- ================= WELCOME CARD ================= -->
+
+        <div class="welcome-card">
+
+            <h1>
+                👋 Welcome, {{ student[3] }}!
+            </h1>
+
+            <p>
+                Here is your complete attendance overview.
+            </p>
+
+
+            <div class="student-details">
+
+                <div class="detail-item">
+                    🆔 Roll No: <strong>{{ student[4] }}</strong>
+                </div>
+
+                <div class="detail-item">
+                    👤 Username: <strong>{{ student[1] }}</strong>
+                </div>
+
+            </div>
+
         </div>
 
-        <div class="card">
-            <h3>Attendance</h3>
-            <h2>{{ percentage }}%</h2>
+
+        <!-- ================= STATISTICS ================= -->
+
+        <div class="stats">
+
+
+            <!-- TOTAL CLASSES -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon blue">
+                    📚
+                </div>
+
+                <div class="stat-info">
+
+                    <h3>
+                        {{ total_classes }}
+                    </h3>
+
+                    <p>
+                        Total Classes
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- PRESENT -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon green">
+                    ✅
+                </div>
+
+                <div class="stat-info">
+
+                    <h3>
+                        {{ present }}
+                    </h3>
+
+                    <p>
+                        Present
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- ABSENT -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon red">
+                    ❌
+                </div>
+
+                <div class="stat-info">
+
+                    <h3>
+                        {{ absent }}
+                    </h3>
+
+                    <p>
+                        Absent
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- PERCENTAGE -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon purple">
+                    📊
+                </div>
+
+                <div class="stat-info">
+
+                    <h3>
+                        {{ percentage }}%
+                    </h3>
+
+                    <p>
+                        Attendance
+                    </p>
+
+                </div>
+
+            </div>
+
+
         </div>
 
-    </div>
 
-    <div class="attendance-table">
+        <!-- ================= ATTENDANCE PERCENTAGE ================= -->
 
-        <h2>Attendance History</h2>
+        <div class="percentage-card">
 
-        <table>
+            <div class="percentage-header">
 
-            <tr>
-                <th>Date</th>
-                <th>Status</th>
-            </tr>
+                <h2>
+                    📈 Attendance Percentage
+                </h2>
 
-            {% for record in attendance %}
+                <div class="percentage-value">
+                    {{ percentage }}%
+                </div>
 
-            <tr>
-                <td>{{ record[0] }}</td>
+            </div>
 
-                {% if record[1] == "Present" %}
-                    <td class="present">Present</td>
+
+            <div class="progress-bar">
+
+                <div class="progress"></div>
+
+            </div>
+
+
+            <div class="percentage-note">
+
+                {% if percentage < 75 %}
+
+                    ⚠️ Your attendance is below 75%. Please attend more classes.
+
+                {% elif percentage >= 75 and percentage < 85 %}
+
+                    👍 Your attendance is satisfactory. Try to maintain or improve it.
+
                 {% else %}
-                    <td class="absent">Absent</td>
+
+                    🎉 Excellent attendance! Keep it up.
+
                 {% endif %}
 
-            </tr>
+            </div>
 
-            {% endfor %}
+        </div>
 
-        </table>
+
+        <!-- ================= ATTENDANCE WARNING ================= -->
+
+        {% if percentage < 75 %}
+
+            <div class="warning-box">
+
+                ⚠️ <strong>Attendance Warning:</strong>
+                Your current attendance is {{ percentage }}%, which is below the required 75%.
+                Please make sure to attend your upcoming classes regularly.
+
+            </div>
+
+        {% else %}
+
+            <div class="good-box">
+
+                ✅ <strong>Good Attendance:</strong>
+                Your attendance is {{ percentage }}%, which meets the minimum 75% requirement.
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- ================= ATTENDANCE HISTORY ================= -->
+
+        <div class="history-card">
+
+            <div class="history-header">
+
+                <h2>
+                    📅 Attendance History
+                </h2>
+
+                <span>
+                    Your attendance records
+                </span>
+
+            </div>
+
+
+            {% if attendance %}
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                #
+                            </th>
+
+                            <th>
+                                Date
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for record in attendance %}
+
+                            <tr>
+
+                                <td>
+                                    {{ loop.index }}
+                                </td>
+
+                                <td>
+                                    📅 {{ record[0] }}
+                                </td>
+
+                                <td>
+
+                                    {% if record[1] == "Present" %}
+
+                                        <span class="status present">
+                                            ✅ Present
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="status absent">
+                                            ❌ Absent
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            {% else %}
+
+                <div class="empty">
+
+                    <div class="empty-icon">
+                        📭
+                    </div>
+
+                    <h3>
+                        No Attendance Records
+                    </h3>
+
+                    <p>
+                        Your attendance records will appear here once attendance is marked.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+
+        </div>
+
 
     </div>
 
-    <div style="text-align:center;">
-        <a href="/" class="logout">Logout</a>
-    </div>
 
-</div>
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        © 2026 Student Attendance Management System
+
+    </footer>
+    {% include 'chatbot_widget.html' %}
 
 </body>
+
 </html>
-```
+

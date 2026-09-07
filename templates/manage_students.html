@@ -1,414 +1,789 @@
+```html
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Manage Students</title>
 
-```
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #f4f6f8;
-        margin: 0;
-    }
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
 
-    .container {
-        width: 90%;
-        margin: 40px auto;
-    }
+        body {
+            background: #f4f7fb;
+            color: #1f2937;
+            min-height: 100vh;
+        }
 
-    h1 {
-        text-align: center;
-        margin-bottom: 30px;
-    }
+        /* =========================
+           NAVBAR
+        ========================= */
 
-    .box {
-        background: white;
-        padding: 25px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        margin-bottom: 30px;
-    }
+        .navbar {
+            background: white;
+            padding: 16px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-    h2 {
-        text-align: center;
-        margin-bottom: 20px;
-    }
+        .logo {
+            font-size: 21px;
+            font-weight: 700;
+            color: #2563eb;
+        }
 
-    /* =========================
-       ADD STUDENT FORM
-       ========================= */
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
 
-    .form-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 15px;
-    }
+        .nav-links a {
+            text-decoration: none;
+            color: #374151;
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.3s;
+        }
 
-    label {
-        font-weight: bold;
-    }
+        .nav-links a:hover {
+            color: #2563eb;
+        }
 
-    input {
-        width: 100%;
-        padding: 10px;
-        margin-top: 5px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        box-sizing: border-box;
-    }
+        .logout {
+            color: #dc2626 !important;
+        }
 
-    .add-btn {
-        display: block;
-        margin: 20px auto 0;
-        padding: 12px 25px;
-        background: #28a745;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 16px;
-    }
-
-    .add-btn:hover {
-        background: #218838;
-    }
-
-    /* =========================
-       SEARCH
-       ========================= */
-
-    .search-form {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        margin-bottom: 20px;
-    }
-
-    .search-form input {
-        width: 300px;
-        margin-top: 0;
-    }
-
-    .search-btn {
-        padding: 10px 20px;
-        background: #007bff;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    .search-btn:hover {
-        background: #0056b3;
-    }
-
-    .clear-btn {
-        padding: 10px 20px;
-        background: #6c757d;
-        color: white;
-        text-decoration: none;
-        border-radius: 5px;
-    }
-
-    /* =========================
-       TABLE
-       ========================= */
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    th,
-    td {
-        padding: 12px;
-        border: 1px solid #ddd;
-        text-align: center;
-    }
-
-    th {
-        background: #333;
-        color: white;
-    }
-
-    /* =========================
-       ACTION BUTTONS
-       ========================= */
-
-    .edit-btn {
-        background: #ffc107;
-        color: black;
-        padding: 8px 12px;
-        text-decoration: none;
-        border-radius: 5px;
-    }
-
-    .edit-btn:hover {
-        background: #e0a800;
-    }
-
-    .delete-btn {
-        background: #dc3545;
-        color: white;
-        padding: 8px 12px;
-        text-decoration: none;
-        border-radius: 5px;
-    }
-
-    .delete-btn:hover {
-        background: #c82333;
-    }
-
-    .back {
-        display: block;
-        width: 180px;
-        margin: 25px auto;
-        padding: 12px;
-        text-align: center;
-        background: #333;
-        color: white;
-        text-decoration: none;
-        border-radius: 5px;
-    }
-
-    .back:hover {
-        background: #222;
-    }
-
-    .no-result {
-        text-align: center;
-        color: #dc3545;
-        font-weight: bold;
-        padding: 20px;
-    }
-
-    @media (max-width: 700px) {
+        /* =========================
+           MAIN CONTAINER
+        ========================= */
 
         .container {
-            width: 95%;
+            width: 90%;
+            max-width: 1200px;
+            margin: 40px auto;
         }
 
-        .form-grid {
-            grid-template-columns: 1fr;
+        /* =========================
+           PAGE HEADER
+        ========================= */
+
+        .page-header {
+            margin-bottom: 25px;
         }
+
+        .page-header h1 {
+            font-size: 32px;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #6b7280;
+            font-size: 15px;
+        }
+
+        /* =========================
+           FLASH MESSAGES
+        ========================= */
+
+        .message {
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .message.success {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .message.warning {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+
+        /* =========================
+           TOP ACTION CARD
+        ========================= */
+
+        .action-card {
+            background: white;
+            padding: 22px;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+            margin-bottom: 25px;
+        }
+
+        .action-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        /* =========================
+           SEARCH
+        ========================= */
 
         .search-form {
-            flex-direction: column;
+            display: flex;
+            gap: 10px;
+            flex: 1;
+            max-width: 650px;
         }
 
-        .search-form input {
+        .search-box {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-box input {
             width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 9px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-box input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .btn {
+            padding: 11px 19px;
+            border: none;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #eef2ff;
+            color: #3730a3;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e7ff;
+        }
+
+        .btn-success {
+            background: #16a34a;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #15803d;
+            transform: translateY(-1px);
+        }
+
+        /* =========================
+           STUDENT CARD
+        ========================= */
+
+        .student-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 22px 25px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-header h2 {
+            font-size: 20px;
+            color: #111827;
+        }
+
+        .student-count {
+            background: #eff6ff;
+            color: #1d4ed8;
+            padding: 7px 13px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* =========================
+           TABLE
+        ========================= */
+
+        .table-container {
+            overflow-x: auto;
         }
 
         table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #4b5563;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #f0f2f5;
+            font-size: 14px;
+            vertical-align: middle;
+        }
+
+        tbody tr {
+            transition: 0.2s;
+        }
+
+        tbody tr:hover {
+            background: #f8fbff;
+        }
+
+        .roll-badge {
+            background: #eff6ff;
+            color: #1d4ed8;
+            padding: 6px 10px;
+            border-radius: 7px;
+            font-weight: 700;
+            font-size: 13px;
+            display: inline-block;
+        }
+
+        .student-name {
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .username {
+            color: #6b7280;
+        }
+
+        /* =========================
+           ACTION BUTTONS
+        ========================= */
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .edit-btn {
+            background: #eef2ff;
+            color: #3730a3;
+            padding: 8px 13px;
+            border-radius: 7px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .edit-btn:hover {
+            background: #e0e7ff;
+        }
+
+        .delete-btn {
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 8px 13px;
+            border-radius: 7px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .delete-btn:hover {
+            background: #fecaca;
+        }
+
+        /* =========================
+           NO STUDENTS
+        ========================= */
+
+        .no-students {
+            text-align: center;
+            padding: 55px 20px;
+            color: #6b7280;
+        }
+
+        .no-students .icon {
+            font-size: 45px;
+            margin-bottom: 12px;
+        }
+
+        .no-students h3 {
+            color: #374151;
+            margin-bottom: 7px;
+        }
+
+        .no-students p {
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            text-align: center;
+            padding: 30px 15px;
+            color: #6b7280;
             font-size: 13px;
         }
 
-        th,
-        td {
-            padding: 8px;
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 768px) {
+
+            .navbar {
+                padding: 15px 4%;
+            }
+
+            .logo {
+                font-size: 17px;
+            }
+
+            .nav-links {
+                gap: 10px;
+            }
+
+            .nav-links a {
+                font-size: 12px;
+            }
+
+            .container {
+                width: 94%;
+                margin: 25px auto;
+            }
+
+            .page-header h1 {
+                font-size: 26px;
+            }
+
+            .action-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-form {
+                max-width: none;
+                width: 100%;
+            }
+
+            .btn-success {
+                width: 100%;
+                text-align: center;
+            }
+
+            .card-header {
+                padding: 18px;
+            }
+
+            .card-header h2 {
+                font-size: 18px;
+            }
+
+            .student-count {
+                font-size: 12px;
+            }
         }
-    }
 
-</style>
-```
+        @media (max-width: 500px) {
 
+            .search-form {
+                flex-direction: column;
+            }
+
+            .search-form .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .nav-links a:first-child {
+                display: none;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="container">
+    <!-- =========================
+         NAVBAR
+    ========================== -->
 
-```
-<h1>👨‍🎓 Manage Students</h1>
+    <nav class="navbar">
+
+        <div class="logo">
+            📚 Attendance Management System
+        </div>
+
+        <div class="nav-links">
+
+            <a href="/teacher-dashboard">
+                Dashboard
+            </a>
+
+            <a href="/" class="logout">
+                Logout
+            </a>
+
+        </div>
+
+    </nav>
 
 
-<!-- =========================
-     ADD STUDENT
-     ========================= -->
+    <!-- =========================
+         MAIN CONTENT
+    ========================== -->
 
-<div class="box">
+    <div class="container">
 
-    <h2>➕ Add New Student</h2>
+        <!-- PAGE HEADER -->
 
-    <form method="POST" action="/add-student">
+        <div class="page-header">
 
-        <div class="form-grid">
+            <h1>
+                👨‍🎓 Manage Students
+            </h1>
 
-            <div>
-                <label>Student Name</label>
+            <p>
+                Add, search, edit and manage student information.
+            </p>
 
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Enter student name"
-                    required
+        </div>
+
+
+        <!-- =========================
+             FLASH MESSAGES
+        ========================== -->
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                {% for category, message in messages %}
+
+                    <div class="message {{ category }}">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <!-- =========================
+             SEARCH + ADD STUDENT
+        ========================== -->
+
+        <div class="action-card">
+
+            <div class="action-row">
+
+                <!-- SEARCH -->
+
+                <form
+                    method="GET"
+                    action="/manage-students"
+                    class="search-form"
                 >
-            </div>
+
+                    <div class="search-box">
+
+                        <input
+                            type="text"
+                            name="search"
+                            placeholder="🔍 Search by name, roll number or username..."
+                            value="{{ search }}"
+                        >
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        Search
+                    </button>
+
+                    <a
+                        href="/manage-students"
+                        class="btn btn-secondary"
+                    >
+                        Clear
+                    </a>
+
+                </form>
 
 
-            <div>
-                <label>Roll Number</label>
+                <!-- ADD STUDENT -->
 
-                <input
-                    type="text"
-                    name="roll_no"
-                    placeholder="Enter roll number"
-                    required
+                <a
+                    href="/add-student"
+                    class="btn btn-success"
                 >
-            </div>
+                    ➕ Add Student
+                </a>
 
-
-            <div>
-                <label>Username</label>
-
-                <input
-                    type="text"
-                    name="username"
-                    placeholder="Enter username"
-                    required
-                >
-            </div>
-
-
-            <div>
-                <label>Password</label>
-
-                <input
-                    type="text"
-                    name="password"
-                    placeholder="Enter password"
-                    required
-                >
             </div>
 
         </div>
 
 
-        <button type="submit" class="add-btn">
-            Add Student
-        </button>
+        <!-- =========================
+             STUDENT TABLE
+        ========================== -->
 
-    </form>
+        <div class="student-card">
 
-</div>
+            <div class="card-header">
+
+                <h2>
+                    Student List
+                </h2>
+
+                <span class="student-count">
+                    👥 {{ students|length }} Student(s)
+                </span>
+
+            </div>
 
 
-<!-- =========================
-     SEARCH STUDENT
-     ========================= -->
+            {% if students %}
 
-<div class="box">
+            <div class="table-container">
 
-    <h2>🔍 Search Student</h2>
+                <table>
 
-    <form method="GET"
-          action="/manage-students"
-          class="search-form">
+                    <thead>
 
-        <input
-            type="text"
-            name="search"
-            value="{{ search }}"
-            placeholder="Search by name, roll no or username"
-        >
+                        <tr>
 
-        <button type="submit" class="search-btn">
-            Search
-        </button>
+                            <th>
+                                Roll No
+                            </th>
 
-        <a href="/manage-students"
-           class="clear-btn">
-            Clear
-        </a>
+                            <th>
+                                Student Name
+                            </th>
 
-    </form>
+                            <th>
+                                Username
+                            </th>
+
+                            <th>
+                                Password
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for student in students %}
+
+                        <tr>
+
+                            <!-- ROLL NUMBER -->
+
+                            <td>
+
+                                <span class="roll-badge">
+                                    {{ student[4] }}
+                                </span>
+
+                            </td>
+
+
+                            <!-- NAME -->
+
+                            <td>
+
+                                <span class="student-name">
+                                    {{ student[3] }}
+                                </span>
+
+                            </td>
+
+
+                            <!-- USERNAME -->
+
+                            <td>
+
+                                <span class="username">
+                                    {{ student[1] }}
+                                </span>
+
+                            </td>
+
+
+                            <!-- PASSWORD -->
+
+                            <td>
+
+                                <span class="username">
+                                    {{ student[2] }}
+                                </span>
+
+                            </td>
+
+
+                            <!-- ACTIONS -->
+
+                            <td>
+
+                                <div class="actions">
+
+                                    <a
+                                        href="/edit-student/{{ student[0] }}"
+                                        class="edit-btn"
+                                    >
+                                        ✏️ Edit
+                                    </a>
+
+                                    <a
+                                        href="/delete-student/{{ student[0] }}"
+                                        class="delete-btn"
+                                        onclick="return confirm('Are you sure you want to delete this student?');"
+                                    >
+                                        🗑️ Delete
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <!-- NO STUDENTS -->
+
+            <div class="no-students">
+
+                <div class="icon">
+                    📭
+                </div>
+
+                <h3>
+                    No Students Found
+                </h3>
+
+                <p>
+                    {% if search %}
+                        No student matches your search "{{ search }}".
+                    {% else %}
+                        There are currently no students in the system.
+                    {% endif %}
+                </p>
+
+                {% if search %}
+
+                    <a
+                        href="/manage-students"
+                        class="btn btn-secondary"
+                    >
+                        Show All Students
+                    </a>
+
+                {% else %}
+
+                    <a
+                        href="/add-student"
+                        class="btn btn-success"
+                    >
+                        ➕ Add First Student
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
 
 
     <!-- =========================
-         STUDENT TABLE
-         ========================= -->
+         FOOTER
+    ========================== -->
 
-    {% if students %}
+    <footer>
 
-    <table>
+        © 2026 Student Attendance Management System
 
-        <tr>
-            <th>ID</th>
-            <th>Student Name</th>
-            <th>Roll No</th>
-            <th>Username</th>
-            <th>Actions</th>
-        </tr>
-
-
-        {% for student in students %}
-
-        <tr>
-
-            <td>
-                {{ student[0] }}
-            </td>
-
-            <td>
-                {{ student[3] }}
-            </td>
-
-            <td>
-                {{ student[4] }}
-            </td>
-
-            <td>
-                {{ student[1] }}
-            </td>
-
-            <td>
-
-                <a
-                    href="/edit-student/{{ student[0] }}"
-                    class="edit-btn"
-                >
-                    ✏️ Edit
-                </a>
-
-                &nbsp;
-
-                <a
-                    href="/delete-student/{{ student[0] }}"
-                    class="delete-btn"
-                    onclick="return confirm('Are you sure you want to delete this student?');"
-                >
-                    🗑️ Delete
-                </a>
-
-            </td>
-
-        </tr>
-
-        {% endfor %}
-
-    </table>
-
-    {% else %}
-
-    <div class="no-result">
-        No students found.
-    </div>
-
-    {% endif %}
-
-</div>
-
-
-<!-- BACK BUTTON -->
-
-<a href="/teacher-dashboard" class="back">
-    ← Back to Dashboard
-</a>
-```
-
-</div>
-
+    </footer>
+    {% include 'chatbot_widget.html' %}
+    
 </body>
 </html>
+

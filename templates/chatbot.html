@@ -1,0 +1,782 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>24/7 Support Chatbot</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        /* ================= CHAT BUTTON ================= */
+
+        .chat-button {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+
+            width: 62px;
+            height: 62px;
+
+            border: none;
+            border-radius: 50%;
+
+            background: #2563eb;
+            color: white;
+
+            font-size: 27px;
+
+            cursor: pointer;
+
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+
+            z-index: 9999;
+
+            transition: 0.3s;
+        }
+
+        .chat-button:hover {
+            transform: scale(1.08);
+            background: #1d4ed8;
+        }
+
+
+        /* ================= CHAT WINDOW ================= */
+
+        .chat-container {
+
+            position: fixed;
+
+            bottom: 100px;
+            right: 25px;
+
+            width: 360px;
+            max-width: calc(100vw - 30px);
+
+            height: 500px;
+
+            background: white;
+
+            border-radius: 16px;
+
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
+
+            overflow: hidden;
+
+            display: none;
+
+            flex-direction: column;
+
+            z-index: 9998;
+        }
+
+
+        .chat-container.active {
+            display: flex;
+        }
+
+
+        /* ================= HEADER ================= */
+
+        .chat-header {
+
+            background: linear-gradient(
+                135deg,
+                #1e3a8a,
+                #2563eb
+            );
+
+            color: white;
+
+            padding: 17px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+
+        .chat-title {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+        }
+
+
+        .bot-icon {
+
+            width: 42px;
+            height: 42px;
+
+            border-radius: 50%;
+
+            background: rgba(255,255,255,0.2);
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            font-size: 22px;
+        }
+
+
+        .chat-title h3 {
+            font-size: 16px;
+            margin-bottom: 3px;
+        }
+
+
+        .online-status {
+
+            font-size: 11px;
+
+            color: #bbf7d0;
+        }
+
+
+        .close-button {
+
+            background: transparent;
+
+            border: none;
+
+            color: white;
+
+            font-size: 22px;
+
+            cursor: pointer;
+        }
+
+
+        /* ================= CHAT BODY ================= */
+
+        .chat-body {
+
+            flex: 1;
+
+            padding: 15px;
+
+            background: #f8fafc;
+
+            overflow-y: auto;
+        }
+
+
+        .message {
+
+            display: flex;
+
+            margin-bottom: 12px;
+        }
+
+
+        .message.bot {
+            justify-content: flex-start;
+        }
+
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+
+        .message-content {
+
+            max-width: 80%;
+
+            padding: 10px 13px;
+
+            border-radius: 12px;
+
+            font-size: 13px;
+
+            line-height: 1.5;
+        }
+
+
+        .message.bot .message-content {
+
+            background: white;
+
+            color: #334155;
+
+            border: 1px solid #e2e8f0;
+
+            border-bottom-left-radius: 3px;
+        }
+
+
+        .message.user .message-content {
+
+            background: #2563eb;
+
+            color: white;
+
+            border-bottom-right-radius: 3px;
+        }
+
+
+        /* ================= QUICK QUESTIONS ================= */
+
+        .quick-questions {
+
+            padding: 10px 15px;
+
+            background: white;
+
+            border-top: 1px solid #e2e8f0;
+        }
+
+
+        .quick-title {
+
+            font-size: 11px;
+
+            color: #64748b;
+
+            margin-bottom: 8px;
+        }
+
+
+        .quick-buttons {
+
+            display: flex;
+
+            gap: 6px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .quick-btn {
+
+            border: 1px solid #bfdbfe;
+
+            background: #eff6ff;
+
+            color: #1d4ed8;
+
+            padding: 6px 9px;
+
+            border-radius: 15px;
+
+            font-size: 11px;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+
+        .quick-btn:hover {
+
+            background: #dbeafe;
+        }
+
+
+        /* ================= INPUT ================= */
+
+        .chat-input-area {
+
+            display: flex;
+
+            gap: 8px;
+
+            padding: 12px;
+
+            background: white;
+
+            border-top: 1px solid #e2e8f0;
+        }
+
+
+        .chat-input {
+
+            flex: 1;
+
+            border: 1px solid #cbd5e1;
+
+            border-radius: 20px;
+
+            padding: 10px 14px;
+
+            outline: none;
+
+            font-size: 13px;
+        }
+
+
+        .chat-input:focus {
+
+            border-color: #2563eb;
+
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+        }
+
+
+        .send-button {
+
+            width: 40px;
+            height: 40px;
+
+            border: none;
+
+            border-radius: 50%;
+
+            background: #2563eb;
+
+            color: white;
+
+            cursor: pointer;
+
+            font-size: 17px;
+
+            transition: 0.3s;
+        }
+
+
+        .send-button:hover {
+
+            background: #1d4ed8;
+        }
+
+
+        /* ================= TYPING ================= */
+
+        .typing {
+
+            display: none;
+
+            font-size: 12px;
+
+            color: #64748b;
+
+            padding: 5px 0 10px;
+        }
+
+
+        .typing.active {
+
+            display: block;
+        }
+
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 500px) {
+
+            .chat-container {
+
+                right: 15px;
+
+                bottom: 90px;
+
+                width: calc(100vw - 30px);
+
+                height: 480px;
+            }
+
+
+            .chat-button {
+
+                right: 18px;
+
+                bottom: 18px;
+
+                width: 58px;
+
+                height: 58px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- ================= CHAT BUTTON ================= -->
+
+    <button
+        class="chat-button"
+        id="chatButton"
+        onclick="toggleChat()"
+        title="24/7 Support">
+
+        💬
+
+    </button>
+
+
+    <!-- ================= CHAT CONTAINER ================= -->
+
+    <div
+        class="chat-container"
+        id="chatContainer">
+
+
+        <!-- ================= HEADER ================= -->
+
+        <div class="chat-header">
+
+            <div class="chat-title">
+
+                <div class="bot-icon">
+                    🤖
+                </div>
+
+                <div>
+
+                    <h3>
+                        24/7 Student Support
+                    </h3>
+
+                    <div class="online-status">
+                        ● Online
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <button
+                class="close-button"
+                onclick="toggleChat()">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <!-- ================= CHAT BODY ================= -->
+
+        <div
+            class="chat-body"
+            id="chatBody">
+
+
+            <!-- INITIAL BOT MESSAGE -->
+
+            <div class="message bot">
+
+                <div class="message-content">
+
+                    👋 Hello! I'm your Attendance Management
+                    System support assistant.
+
+                    <br><br>
+
+                    I can help you with login, attendance,
+                    student management and other common questions.
+
+                    <br><br>
+
+                    How can I help you today? 😊
+
+                </div>
+
+            </div>
+
+
+            <!-- TYPING -->
+
+            <div
+                class="typing"
+                id="typing">
+
+                🤖 Assistant is typing...
+
+            </div>
+
+
+        </div>
+
+
+        <!-- ================= QUICK QUESTIONS ================= -->
+
+        <div class="quick-questions">
+
+            <div class="quick-title">
+                Quick Questions
+            </div>
+
+
+            <div class="quick-buttons">
+
+                <button
+                    class="quick-btn"
+                    onclick="sendQuickMessage('How do I login?')">
+
+                    🔐 Login
+
+                </button>
+
+
+                <button
+                    class="quick-btn"
+                    onclick="sendQuickMessage('How do I mark attendance?')">
+
+                    📅 Attendance
+
+                </button>
+
+
+                <button
+                    class="quick-btn"
+                    onclick="sendQuickMessage('How can I check my attendance?')">
+
+                    📊 My Attendance
+
+                </button>
+
+
+                <button
+                    class="quick-btn"
+                    onclick="sendQuickMessage('I need help')">
+
+                    🆘 Help
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= INPUT ================= -->
+
+        <div class="chat-input-area">
+
+            <input
+                type="text"
+                id="chatInput"
+                class="chat-input"
+                placeholder="Type your question..."
+                autocomplete="off"
+                onkeydown="handleEnter(event)"
+            >
+
+
+            <button
+                class="send-button"
+                onclick="sendMessage()">
+
+                ➤
+
+            </button>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+        /* ================= OPEN / CLOSE CHAT ================= */
+
+        function toggleChat() {
+
+            const chat =
+                document.getElementById("chatContainer");
+
+            chat.classList.toggle("active");
+
+        }
+
+
+        /* ================= ENTER KEY ================= */
+
+        function handleEnter(event) {
+
+            if (event.key === "Enter") {
+
+                sendMessage();
+
+            }
+
+        }
+
+
+        /* ================= QUICK MESSAGE ================= */
+
+        function sendQuickMessage(message) {
+
+            document.getElementById("chatInput").value = message;
+
+            sendMessage();
+
+        }
+
+
+        /* ================= ADD MESSAGE ================= */
+
+        function addMessage(message, type) {
+
+            const chatBody =
+                document.getElementById("chatBody");
+
+
+            const messageDiv =
+                document.createElement("div");
+
+
+            messageDiv.className =
+                "message " + type;
+
+
+            const content =
+                document.createElement("div");
+
+
+            content.className =
+                "message-content";
+
+
+            content.textContent =
+                message;
+
+
+            messageDiv.appendChild(content);
+
+
+            chatBody.appendChild(messageDiv);
+
+
+            chatBody.scrollTop =
+                chatBody.scrollHeight;
+
+        }
+
+
+        /* ================= SEND MESSAGE ================= */
+
+        function sendMessage() {
+
+            const input =
+                document.getElementById("chatInput");
+
+
+            const message =
+                input.value.trim();
+
+
+            if (message === "") {
+
+                return;
+
+            }
+
+
+            /* Show user message */
+
+            addMessage(message, "user");
+
+
+            input.value = "";
+
+
+            /* Show typing */
+
+            const typing =
+                document.getElementById("typing");
+
+
+            typing.classList.add("active");
+
+
+            const chatBody =
+                document.getElementById("chatBody");
+
+
+            chatBody.scrollTop =
+                chatBody.scrollHeight;
+
+
+            /*
+             * Send question to Flask backend
+             */
+
+            fetch("/chatbot", {
+
+                method: "POST",
+
+                headers: {
+
+                    "Content-Type":
+                        "application/json"
+
+                },
+
+                body: JSON.stringify({
+
+                    message: message
+
+                })
+
+            })
+
+            .then(response => response.json())
+
+            .then(data => {
+
+                typing.classList.remove("active");
+
+
+                addMessage(
+                    data.reply,
+                    "bot"
+                );
+
+            })
+
+            .catch(error => {
+
+                typing.classList.remove("active");
+
+
+                addMessage(
+                    "Sorry, I'm having trouble connecting right now. Please try again.",
+                    "bot"
+                );
+
+                console.error(error);
+
+            });
+
+        }
+
+
+    </script>
+
+
+</body>
+
+</html>
+```

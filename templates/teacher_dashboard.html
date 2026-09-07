@@ -1,38 +1,98 @@
+```html
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 
-    <title>Teacher Dashboard</title>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Teacher Dashboard | Attendance System</title>
 
     <style>
 
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        /* =========================
+           NAVBAR
+        ========================= */
+
+        .navbar {
+            background: white;
+            padding: 18px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 21px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .logout {
+            text-decoration: none;
+            color: #dc2626;
+            font-weight: bold;
+            padding: 9px 16px;
+            border: 1px solid #fecaca;
+            border-radius: 7px;
+            transition: 0.3s;
+        }
+
+        .logout:hover {
+            background: #fee2e2;
+        }
+
+        /* =========================
+           CONTAINER
+        ========================= */
 
         .container {
             width: 90%;
-            margin: 30px auto;
+            max-width: 1250px;
+            margin: 35px auto;
         }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 10px;
-        }
+        /* =========================
+           HEADER
+        ========================= */
 
-        .subtitle {
-            text-align: center;
-            color: #666;
+        .dashboard-header {
             margin-bottom: 30px;
+        }
+
+        .dashboard-header h1 {
+            font-size: 34px;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .dashboard-header p {
+            color: #6b7280;
+            font-size: 16px;
         }
 
         /* =========================
            STAT CARDS
-           ========================= */
+        ========================= */
 
         .stats {
             display: grid;
@@ -43,129 +103,273 @@
 
         .stat-card {
             background: white;
-            padding: 25px;
-            text-align: center;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 24px;
+            border-radius: 14px;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e5e7eb;
+            transition: 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.09);
+        }
+
+        .stat-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #dbeafe;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 23px;
         }
 
         .stat-card h2 {
-            margin: 0;
-            font-size: 28px;
+            font-size: 30px;
+            color: #111827;
+            margin-bottom: 5px;
         }
 
         .stat-card p {
-            margin-top: 8px;
-            color: #666;
+            color: #6b7280;
+            font-size: 14px;
         }
 
         /* =========================
-           MENU BUTTONS
-           ========================= */
+           QUICK ACTIONS
+        ========================= */
+
+        .actions-section {
+            margin-bottom: 30px;
+        }
+
+        .actions-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #111827;
+        }
 
         .menu {
-            display: flex;
-            justify-content: center;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 15px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
         }
 
         .menu a {
             text-decoration: none;
-            color: white;
-            background: #007bff;
-            padding: 12px 20px;
-            border-radius: 6px;
+            background: white;
+            color: #1f2937;
+            padding: 17px 20px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            font-weight: bold;
+            transition: 0.3s;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
         }
 
         .menu a:hover {
-            background: #0056b3;
+            color: #2563eb;
+            border-color: #93c5fd;
+            transform: translateY(-2px);
         }
 
         /* =========================
-           SECTION
-           ========================= */
+           SECTIONS
+        ========================= */
 
         .section {
             background: white;
             padding: 25px;
-            border-radius: 10px;
+            border-radius: 14px;
             margin-bottom: 30px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e5e7eb;
         }
 
-        .section h2 {
-            text-align: center;
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .section-header h2 {
+            font-size: 21px;
+            color: #111827;
+        }
+
+        .section-description {
+            color: #6b7280;
+            font-size: 13px;
         }
 
         /* =========================
            TABLE
-           ========================= */
+        ========================= */
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
 
         table {
             width: 100%;
             border-collapse: collapse;
-        }
-
-        th,
-        td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: center;
+            min-width: 700px;
         }
 
         th {
-            background: #333;
-            color: white;
+            background: #f1f5f9;
+            color: #374151;
+            padding: 14px 12px;
+            text-align: center;
+            font-size: 13px;
+            border-bottom: 2px solid #e5e7eb;
         }
 
-        .good {
-            color: green;
+        td {
+            padding: 14px 12px;
+            text-align: center;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 14px;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        /* =========================
+           STUDENT NAME
+        ========================= */
+
+        .student-name {
             font-weight: bold;
+            color: #111827;
+        }
+
+        .roll-number {
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        /* =========================
+           STATUS
+        ========================= */
+
+        .good {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            background: #dcfce7;
+            color: #15803d;
+            font-weight: bold;
+            font-size: 13px;
         }
 
         .warning {
-            color: red;
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            background: #fee2e2;
+            color: #dc2626;
             font-weight: bold;
+            font-size: 13px;
         }
+
+        /* =========================
+           LOW ATTENDANCE
+        ========================= */
+
+        .warning-section {
+            border-left: 5px solid #ef4444;
+        }
+
+        .warning-title {
+            color: #dc2626 !important;
+        }
+
+        /* =========================
+           NO DATA
+        ========================= */
 
         .no-data {
             text-align: center;
-            color: #777;
-            padding: 20px;
+            color: #6b7280;
+            padding: 30px !important;
+            font-size: 14px;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 13px;
+            padding: 10px 0 30px;
         }
 
         /* =========================
            RESPONSIVE
-           ========================= */
+        ========================= */
 
-        @media (max-width: 900px) {
+        @media (max-width: 1000px) {
 
             .stats {
                 grid-template-columns: repeat(2, 1fr);
             }
 
+            .menu {
+                grid-template-columns: 1fr 1fr;
+            }
+
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 650px) {
 
             .container {
-                width: 95%;
+                width: 94%;
+                margin: 25px auto;
+            }
+
+            .navbar {
+                padding: 15px 4%;
+            }
+
+            .logo {
+                font-size: 17px;
+            }
+
+            .dashboard-header h1 {
+                font-size: 27px;
             }
 
             .stats {
                 grid-template-columns: 1fr;
             }
 
-            table {
-                font-size: 13px;
+            .menu {
+                grid-template-columns: 1fr;
             }
 
-            th,
-            td {
-                padding: 8px;
+            .section {
+                padding: 18px;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
             }
 
         }
@@ -177,336 +381,515 @@
 
 <body>
 
-<div class="container">
-
 
     <!-- =========================
-         HEADER
-         ========================= -->
+         NAVBAR
+    ========================= -->
 
-    <h1>👨‍🏫 Teacher Dashboard</h1>
+    <nav class="navbar">
 
-    <p class="subtitle">
-        Student Attendance Management System
-    </p>
-
-
-    <!-- =========================
-         STATISTICS
-         ========================= -->
-
-    <div class="stats">
-
-
-        <div class="stat-card">
-
-            <h2>
-                👨‍🎓 {{ total_students }}
-            </h2>
-
-            <p>
-                Total Students
-            </p>
-
+        <div class="logo">
+            📚 Attendance Management System
         </div>
 
-
-        <div class="stat-card">
-
-            <h2>
-                ✅ {{ present_today }}
-            </h2>
-
-            <p>
-                Present Today
-            </p>
-
-        </div>
-
-
-        <div class="stat-card">
-
-            <h2>
-                ❌ {{ absent_today }}
-            </h2>
-
-            <p>
-                Absent Today
-            </p>
-
-        </div>
-
-
-        <div class="stat-card">
-
-            <h2>
-                📊 {{ overall_percentage }}%
-            </h2>
-
-            <p>
-                Overall Attendance
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <!-- =========================
-         MENU
-         ========================= -->
-
-    <div class="menu">
-
-        <a href="/mark-attendance">
-            📝 Mark Attendance
-        </a>
-
-        <a href="/attendance-report">
-            📊 Attendance Report
-        </a>
-
-        <a href="/manage-students">
-            👨‍🎓 Manage Students
-        </a>
-
-        <a href="/">
+        <a href="/" class="logout">
             🚪 Logout
         </a>
 
-    </div>
+    </nav>
 
 
-    <!-- ==================================================
-         STUDENT-WISE ATTENDANCE SUMMARY
-         ================================================== -->
+    <!-- =========================
+         MAIN CONTAINER
+    ========================= -->
 
-    <div class="section">
-
-        <h2>
-            📊 Student-wise Attendance Summary
-        </h2>
+    <div class="container">
 
 
-        <table>
+        <!-- =========================
+             HEADER
+        ========================= -->
 
-            <tr>
+        <div class="dashboard-header">
 
-                <th>
-                    Roll No
-                </th>
+            <h1>
+                👨‍🏫 Teacher Dashboard
+            </h1>
 
-                <th>
-                    Student Name
-                </th>
+            <p>
+                Monitor and manage student attendance from one place.
+            </p>
 
-                <th>
-                    Total Classes
-                </th>
-
-                <th>
-                    Present
-                </th>
-
-                <th>
-                    Absent
-                </th>
-
-                <th>
-                    Attendance %
-                </th>
-
-            </tr>
+        </div>
 
 
-            {% for student in student_attendance %}
+        <!-- =========================
+             STATISTICS
+        ========================= -->
 
-            <tr>
-
-                <!-- ROLL NUMBER -->
-
-                <td>
-                    {{ student[2] }}
-                </td>
+        <div class="stats">
 
 
-                <!-- NAME -->
+            <!-- Total Students -->
 
-                <td>
-                    {{ student[1] }}
-                </td>
+            <div class="stat-card">
 
+                <div class="stat-top">
 
-                <!-- TOTAL CLASSES -->
+                    <div>
+                        <h2>
+                            {{ total_students }}
+                        </h2>
 
-                <td>
-                    {{ student[3] }}
-                </td>
+                        <p>
+                            Total Students
+                        </p>
+                    </div>
 
+                    <div class="stat-icon">
+                        👨‍🎓
+                    </div>
 
-                <!-- PRESENT -->
+                </div>
 
-                <td>
-                    {{ student[4] }}
-                </td>
-
-
-                <!-- ABSENT -->
-
-                <td>
-                    {{ student[5] }}
-                </td>
+            </div>
 
 
-                <!-- PERCENTAGE -->
+            <!-- Present Today -->
 
-                <td>
+            <div class="stat-card">
 
-                    {% if student[3] > 0 %}
+                <div class="stat-top">
 
-                        {% set percentage =
-                            (student[4] / student[3]) * 100
-                        %}
+                    <div>
+                        <h2>
+                            {{ present_today }}
+                        </h2>
 
-                        {% if percentage < 75 %}
+                        <p>
+                            Present Today
+                        </p>
+                    </div>
 
-                            <span class="warning">
+                    <div class="stat-icon">
+                        ✅
+                    </div>
 
-                                ⚠️ {{ percentage | round(2) }}%
+                </div>
 
-                            </span>
+            </div>
+
+
+            <!-- Absent Today -->
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <div>
+                        <h2>
+                            {{ absent_today }}
+                        </h2>
+
+                        <p>
+                            Absent Today
+                        </p>
+                    </div>
+
+                    <div class="stat-icon">
+                        ❌
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Overall Attendance -->
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <div>
+                        <h2>
+                            {{ overall_percentage }}%
+                        </h2>
+
+                        <p>
+                            Overall Attendance
+                        </p>
+                    </div>
+
+                    <div class="stat-icon">
+                        📈
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =========================
+             QUICK ACTIONS
+        ========================= -->
+
+        <div class="actions-section">
+
+            <h2 class="actions-title">
+                ⚡ Quick Actions
+            </h2>
+
+            <div class="menu">
+
+                <a href="/mark-attendance">
+                    📝 Mark Attendance
+                </a>
+
+                <a href="/attendance-report">
+                    📊 Attendance Report
+                </a>
+
+                <a href="/manage-students">
+                    👥 Manage Students
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==================================================
+             STUDENT-WISE ATTENDANCE SUMMARY
+        ================================================== -->
+
+        <div class="section">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        📊 Student-wise Attendance Summary
+                    </h2>
+
+                    <p class="section-description">
+                        View attendance performance of every student.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Roll No
+                            </th>
+
+                            <th>
+                                Student Name
+                            </th>
+
+                            <th>
+                                Total Classes
+                            </th>
+
+                            <th>
+                                Present
+                            </th>
+
+                            <th>
+                                Absent
+                            </th>
+
+                            <th>
+                                Attendance %
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        {% for student in student_attendance %}
+
+                        <tr>
+
+
+                            <!-- ROLL NUMBER -->
+
+                            <td class="roll-number">
+                                {{ student[2] }}
+                            </td>
+
+
+                            <!-- NAME -->
+
+                            <td class="student-name">
+                                {{ student[1] }}
+                            </td>
+
+
+                            <!-- TOTAL CLASSES -->
+
+                            <td>
+                                {{ student[3] }}
+                            </td>
+
+
+                            <!-- PRESENT -->
+
+                            <td>
+                                {{ student[4] }}
+                            </td>
+
+
+                            <!-- ABSENT -->
+
+                            <td>
+                                {{ student[5] }}
+                            </td>
+
+
+                            <!-- PERCENTAGE -->
+
+                            <td>
+
+                                {% if student[3] > 0 %}
+
+                                    {% set percentage =
+                                        (student[4] / student[3]) * 100
+                                    %}
+
+
+                                    {% if percentage < 75 %}
+
+                                        <span class="warning">
+
+                                            ⚠️
+                                            {{ percentage | round(2) }}%
+
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="good">
+
+                                            ✅
+                                            {{ percentage | round(2) }}%
+
+                                        </span>
+
+                                    {% endif %}
+
+                                {% else %}
+
+                                    <span class="warning">
+                                        0%
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                        </tr>
+
 
                         {% else %}
 
-                            <span class="good">
+                        <tr>
 
-                                ✅ {{ percentage | round(2) }}%
+                            <td colspan="6"
+                                class="no-data">
 
-                            </span>
+                                📭 No attendance records available.
 
-                        {% endif %}
+                            </td>
 
-                    {% else %}
+                        </tr>
 
-                        <span class="warning">
-                            0%
-                        </span>
+                        {% endfor %}
 
-                    {% endif %}
 
-                </td>
+                    </tbody>
 
-            </tr>
+                </table>
 
-            {% else %}
+            </div>
 
-            <tr>
+        </div>
 
-                <td colspan="6" class="no-data">
 
-                    No attendance records available.
+        <!-- ==================================================
+             LOW ATTENDANCE STUDENTS
+        ================================================== -->
 
-                </td>
+        <div class="section warning-section">
 
-            </tr>
+            <div class="section-header">
 
-            {% endfor %}
+                <div>
 
-        </table>
+                    <h2 class="warning-title">
+                        ⚠️ Students Below 75% Attendance
+                    </h2>
+
+                    <p class="section-description">
+                        Students who may need attention regarding attendance.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Roll No
+                            </th>
+
+                            <th>
+                                Student Name
+                            </th>
+
+                            <th>
+                                Total Classes
+                            </th>
+
+                            <th>
+                                Present
+                            </th>
+
+                            <th>
+                                Attendance %
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        {% for student in low_attendance_students %}
+
+                        <tr>
+
+
+                            <!-- ROLL NUMBER -->
+
+                            <td class="roll-number">
+                                {{ student[2] }}
+                            </td>
+
+
+                            <!-- NAME -->
+
+                            <td class="student-name">
+                                {{ student[1] }}
+                            </td>
+
+
+                            <!-- TOTAL -->
+
+                            <td>
+                                {{ student[3] }}
+                            </td>
+
+
+                            <!-- PRESENT -->
+
+                            <td>
+                                {{ student[4] }}
+                            </td>
+
+
+                            <!-- PERCENTAGE -->
+
+                            <td>
+
+                                <span class="warning">
+
+                                    ⚠️
+
+                                    {{
+                                        (
+                                            (student[4] / student[3]) * 100
+                                        ) | round(2)
+                                    }}%
+
+                                </span>
+
+                            </td>
+
+
+                        </tr>
+
+
+                        {% else %}
+
+                        <tr>
+
+                            <td colspan="5"
+                                class="no-data">
+
+                                🎉 No students are below 75% attendance.
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             FOOTER
+        ========================= -->
+
+        <footer>
+
+            Student Attendance Management System © 2026
+
+        </footer>
+
 
     </div>
 
-
-    <!-- ==================================================
-         LOW ATTENDANCE STUDENTS
-         ================================================== -->
-
-    <div class="section">
-
-        <h2>
-            ⚠️ Students Below 75% Attendance
-        </h2>
-
-
-        <table>
-
-            <tr>
-
-                <th>
-                    Roll No
-                </th>
-
-                <th>
-                    Student Name
-                </th>
-
-                <th>
-                    Total Classes
-                </th>
-
-                <th>
-                    Present
-                </th>
-
-                <th>
-                    Attendance %
-                </th>
-
-            </tr>
-
-
-            {% for student in low_attendance_students %}
-
-            <tr>
-
-                <td>
-                    {{ student[2] }}
-                </td>
-
-                <td>
-                    {{ student[1] }}
-                </td>
-
-                <td>
-                    {{ student[3] }}
-                </td>
-
-                <td>
-                    {{ student[4] }}
-                </td>
-
-                <td class="warning">
-
-                    ⚠️
-
-                    {{ ((student[4] / student[3]) * 100) | round(2) }}%
-
-                </td>
-
-            </tr>
-
-
-            {% else %}
-
-            <tr>
-
-                <td colspan="5" class="no-data">
-
-                    🎉 No students are below 75% attendance.
-
-                </td>
-
-            </tr>
-
-            {% endfor %}
-
-        </table>
-
-    </div>
-
-
-</div>
-
+    {% include 'chatbot_widget.html' %}
+    
 </body>
 
 </html>
+

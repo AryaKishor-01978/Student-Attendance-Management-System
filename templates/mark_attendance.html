@@ -1,301 +1,497 @@
+```html
 <!DOCTYPE html>
+<html lang="en">
 
-<html>
 <head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>Mark Attendance</title>
 
-```
-<style>
+    <style>
 
-    body {
-        font-family: Arial, sans-serif;
-        background: #f4f6f8;
-        margin: 0;
-        padding: 0;
-    }
+        * {
+            box-sizing: border-box;
+        }
 
-    .container {
-        width: 85%;
-        margin: 40px auto;
-        background: white;
-        padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+        }
 
-    h1 {
-        text-align: center;
-        margin-bottom: 25px;
-    }
+        /* =========================
+           HEADER
+        ========================= */
 
-    /* DATE SECTION */
+        .header {
+            background: #1f4e79;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
 
-    .date-box {
-        text-align: center;
-        margin-bottom: 25px;
-        padding: 20px;
-        background: #f8f9fa;
-        border-radius: 8px;
-    }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
 
-    .date-box label {
-        font-weight: bold;
-        margin-right: 10px;
-    }
-
-    .date-box input {
-        padding: 9px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        font-size: 15px;
-    }
-
-    .load-btn {
-        padding: 9px 18px;
-        margin-left: 8px;
-        background: #007bff;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    .load-btn:hover {
-        background: #0056b3;
-    }
-
-    /* TABLE */
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    th,
-    td {
-        padding: 12px;
-        border: 1px solid #ddd;
-        text-align: center;
-    }
-
-    th {
-        background: #333;
-        color: white;
-    }
-
-    select {
-        padding: 8px;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    /* SAVE BUTTON */
-
-    .save-btn {
-        display: block;
-        margin: 25px auto 10px;
-        padding: 12px 30px;
-        background: #28a745;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 16px;
-    }
-
-    .save-btn:hover {
-        background: #218838;
-    }
-
-    /* BACK BUTTON */
-
-    .back {
-        display: block;
-        text-align: center;
-        margin-top: 20px;
-        text-decoration: none;
-        color: #007bff;
-    }
-
-    .back:hover {
-        text-decoration: underline;
-    }
-
-    /* RESPONSIVE */
-
-    @media (max-width: 700px) {
+        /* =========================
+           MAIN CONTAINER
+        ========================= */
 
         .container {
-            width: 95%;
-            padding: 15px;
+            width: 90%;
+            max-width: 1100px;
+            margin: 30px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
+
+        /* =========================
+           ATTENDANCE MESSAGE
+        ========================= */
+
+        .message {
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            border-radius: 7px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
+        /* =========================
+           DATE SECTION
+        ========================= */
+
+        .date-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .date-section label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .date-section input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+
+        .date-button {
+            padding: 10px 18px;
+            background: #1f4e79;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .date-button:hover {
+            background: #163a5c;
+        }
+
+        /* =========================
+           TABLE
+        ========================= */
 
         table {
-            font-size: 13px;
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
         }
 
-        th,
+        th {
+            background: #1f4e79;
+            color: white;
+            padding: 14px;
+            text-align: center;
+        }
+
         td {
-            padding: 8px;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
         }
 
-        .date-box input {
-            width: 180px;
+        tr:hover {
+            background: #f5f8fc;
         }
 
-    }
+        /* =========================
+           STATUS SELECT
+        ========================= */
 
-</style>
-```
+        select {
+            padding: 8px 12px;
+            border: 1px solid #bbb;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            min-width: 130px;
+        }
+
+        /* =========================
+           SAVE BUTTON
+        ========================= */
+
+        .save-button {
+            display: block;
+            margin: 25px auto 10px;
+            padding: 12px 30px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .save-button:hover {
+            background: #218838;
+        }
+
+        /* =========================
+           BACK BUTTON
+        ========================= */
+
+        .back-button {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .back-button:hover {
+            background: #5a6268;
+        }
+
+        /* =========================
+           NO STUDENTS
+        ========================= */
+
+        .no-students {
+            text-align: center;
+            padding: 25px;
+            color: #777;
+            font-size: 17px;
+        }
+
+        /* =========================
+           MOBILE RESPONSIVE
+        ========================= */
+
+        @media (max-width: 700px) {
+
+            .container {
+                width: 95%;
+                padding: 15px;
+            }
+
+            table {
+                font-size: 13px;
+            }
+
+            th,
+            td {
+                padding: 8px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            select {
+                min-width: 100px;
+            }
+
+        }
+
+    </style>
 
 </head>
 
+
 <body>
 
-<div class="container">
 
-```
-<h1>📝 Mark Attendance</h1>
+    <!-- =========================
+         HEADER
+    ========================= -->
 
+    <div class="header">
 
-<!-- =========================
-     SELECT DATE
-     ========================= -->
+        <h1>
+            Mark Attendance
+        </h1>
 
-<div class="date-box">
-
-    <form method="GET" action="/mark-attendance">
-
-        <label>
-            📅 Attendance Date:
-        </label>
-
-        <input
-            type="date"
-            name="date"
-            value="{{ selected_date }}"
-            required
-        >
-
-        <button type="submit" class="load-btn">
-            Load Attendance
-        </button>
-
-    </form>
-
-</div>
+    </div>
 
 
-<!-- =========================
-     ATTENDANCE FORM
-     ========================= -->
+    <!-- =========================
+         MAIN CONTAINER
+    ========================= -->
 
-<form method="POST" action="/mark-attendance">
-
-    <!-- Send selected date to Flask -->
-
-    <input
-        type="hidden"
-        name="attendance_date"
-        value="{{ selected_date }}"
-    >
+    <div class="container">
 
 
-    <table>
+        <!-- =========================
+             FLASH MESSAGE
+        ========================= -->
 
-        <tr>
-            <th>Roll No</th>
-            <th>Student Name</th>
-            <th>Attendance</th>
-        </tr>
+        {% with messages = get_flashed_messages(with_categories=true) %}
 
+            {% if messages %}
 
-        {% for student in students %}
+                {% for category, message in messages %}
 
-        <tr>
+                    <div class="message {{ category }}">
+                        {{ message }}
+                    </div>
 
-            <!-- ROLL NUMBER -->
+                {% endfor %}
 
-            <td>
-                {{ student[4] }}
-            </td>
+            {% endif %}
 
-
-            <!-- STUDENT NAME -->
-
-            <td>
-                {{ student[3] }}
-            </td>
+        {% endwith %}
 
 
-            <!-- ATTENDANCE -->
+        <!-- =========================
+             DATE SELECTION
+        ========================= -->
 
-            <td>
+        <form method="GET"
+              action="/mark-attendance">
 
-                <select name="status_{{ student[0] }}">
+            <div class="date-section">
 
-                    {% if student[5] == "Present" %}
+                <label for="date">
+                    Select Date:
+                </label>
 
-                        <option value="Present" selected>
-                            Present
-                        </option>
+                <input
+                    type="date"
+                    id="date"
+                    name="date"
+                    value="{{ selected_date }}"
+                    required
+                >
 
-                        <option value="Absent">
-                            Absent
-                        </option>
+                <button
+                    type="submit"
+                    class="date-button">
 
+                    View Students
 
-                    {% elif student[5] == "Absent" %}
+                </button>
 
-                        <option value="Present">
-                            Present
-                        </option>
+            </div>
 
-                        <option value="Absent" selected>
-                            Absent
-                        </option>
-
-
-                    {% else %}
-
-                        <option value="Present" selected>
-                            Present
-                        </option>
-
-                        <option value="Absent">
-                            Absent
-                        </option>
-
-                    {% endif %}
-
-                </select>
-
-            </td>
-
-        </tr>
-
-        {% endfor %}
-
-    </table>
+        </form>
 
 
-    <!-- SAVE -->
+        <!-- =========================
+             ATTENDANCE FORM
+        ========================= -->
 
-    <button type="submit" class="save-btn">
-        💾 Save Attendance
-    </button>
-
-</form>
+        <form
+            method="POST"
+            action="/mark-attendance">
 
 
-<!-- BACK -->
+            <!-- Hidden selected date -->
 
-<a href="/teacher-dashboard" class="back">
-    ← Back to Dashboard
-</a>
-```
+            <input
+                type="hidden"
+                name="attendance_date"
+                value="{{ selected_date }}"
+            >
 
-</div>
+
+            {% if students %}
+
+                <!-- =========================
+                     ATTENDANCE TABLE
+                ========================= -->
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Roll No
+                            </th>
+
+                            <th>
+                                Student Name
+                            </th>
+
+                            <th>
+                                Attendance Status
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for student in students %}
+
+                            <tr>
+
+                                <!-- Roll Number -->
+
+                                <td>
+                                    {{ student[4] }}
+                                </td>
+
+
+                                <!-- Student Name -->
+
+                                <td>
+                                    {{ student[3] }}
+                                </td>
+
+
+                                <!-- Attendance Status -->
+
+                                <td>
+
+                                    <select
+                                        name="status_{{ student[0] }}"
+                                        required
+                                    >
+
+                                        <!-- No status -->
+
+                                        <option
+                                            value=""
+                                            {% if not student[5] %}
+                                            selected
+                                            {% endif %}
+                                        >
+                                            Select Status
+                                        </option>
+
+
+                                        <!-- Present -->
+
+                                        <option
+                                            value="Present"
+                                            {% if student[5] == "Present" %}
+                                            selected
+                                            {% endif %}
+                                        >
+                                            Present
+                                        </option>
+
+
+                                        <!-- Absent -->
+
+                                        <option
+                                            value="Absent"
+                                            {% if student[5] == "Absent" %}
+                                            selected
+                                            {% endif %}
+                                        >
+                                            Absent
+                                        </option>
+
+                                    </select>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+
+                <!-- =========================
+                     SAVE BUTTON
+                ========================= -->
+
+                <button
+                    type="submit"
+                    class="save-button">
+
+                    Save / Update Attendance
+
+                </button>
+
+
+            {% else %}
+
+                <!-- =========================
+                     NO STUDENTS
+                ========================= -->
+
+                <div class="no-students">
+
+                    No students found.
+
+                </div>
+
+            {% endif %}
+
+
+        </form>
+
+
+        <!-- =========================
+             BACK TO DASHBOARD
+        ========================= -->
+
+        <a
+            href="/teacher-dashboard"
+            class="back-button">
+
+            ← Back to Teacher Dashboard
+
+        </a>
+
+
+    </div>
+    {% include 'chatbot_widget.html' %}
 
 </body>
+
 </html>
+

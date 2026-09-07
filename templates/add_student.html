@@ -1,15 +1,13 @@
 ```html
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Edit Student | Attendance Management System</title>
+    <title>Add Student | Attendance Management System</title>
 
     <style>
-
         * {
             margin: 0;
             padding: 0;
@@ -32,7 +30,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
         .logo {
@@ -56,7 +54,7 @@
         }
 
         .nav-links a:hover {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255,255,255,0.15);
         }
 
         .logout {
@@ -67,15 +65,13 @@
             background: #b91c1c !important;
         }
 
-        /* ================= MAIN CONTAINER ================= */
+        /* ================= MAIN ================= */
 
         .container {
             max-width: 700px;
             margin: 50px auto;
             padding: 0 20px;
         }
-
-        /* ================= PAGE HEADING ================= */
 
         .page-heading {
             text-align: center;
@@ -93,7 +89,7 @@
             font-size: 15px;
         }
 
-        /* ================= FLASH MESSAGE ================= */
+        /* ================= FLASH MESSAGES ================= */
 
         .message {
             padding: 13px 16px;
@@ -148,8 +144,8 @@
         .form-icon {
             width: 48px;
             height: 48px;
-            background: #fef3c7;
-            color: #d97706;
+            background: #dbeafe;
+            color: #1d4ed8;
             border-radius: 12px;
             display: flex;
             align-items: center;
@@ -207,7 +203,7 @@
 
         .form-group input:focus {
             border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
         }
 
         .form-group input::placeholder {
@@ -218,22 +214,6 @@
             font-size: 12px;
             color: #64748b;
             margin-top: 6px;
-        }
-
-        /* ================= STUDENT INFO ================= */
-
-        .student-id {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 9px;
-            padding: 12px 14px;
-            margin-bottom: 22px;
-            font-size: 13px;
-            color: #64748b;
-        }
-
-        .student-id strong {
-            color: #334155;
         }
 
         /* ================= BUTTONS ================= */
@@ -257,13 +237,13 @@
             transition: 0.3s;
         }
 
-        .btn-update {
-            background: #2563eb;
+        .btn-success {
+            background: #16a34a;
             color: white;
         }
 
-        .btn-update:hover {
-            background: #1d4ed8;
+        .btn-success:hover {
+            background: #15803d;
             transform: translateY(-1px);
         }
 
@@ -316,15 +296,11 @@
             .buttons {
                 flex-direction: column;
             }
-
         }
-
     </style>
-
 </head>
 
 <body>
-
 
     <!-- ================= NAVBAR ================= -->
 
@@ -357,17 +333,9 @@
 
     <div class="container">
 
-
-        <!-- PAGE HEADING -->
-
         <div class="page-heading">
-
-            <h1>✏️ Edit Student</h1>
-
-            <p>
-                Update the student's information below.
-            </p>
-
+            <h1>➕ Add New Student</h1>
+            <p>Add a new student to the attendance management system.</p>
         </div>
 
 
@@ -394,47 +362,25 @@
 
         <div class="form-card">
 
-
-            <!-- FORM HEADER -->
-
             <div class="form-header">
 
                 <div class="form-icon">
-                    ✏️
+                    👨‍🎓
                 </div>
 
                 <div>
-
-                    <h2>
-                        Student Information
-                    </h2>
-
-                    <p>
-                        Modify the details and save your changes.
-                    </p>
-
+                    <h2>Student Information</h2>
+                    <p>Enter the student's details below.</p>
                 </div>
 
             </div>
 
 
-            <!-- STUDENT ID -->
+            <!-- ================= ADD STUDENT FORM ================= -->
 
-            <div class="student-id">
+            <form method="POST" action="/add-student">
 
-                <strong>Student ID:</strong>
-                {{ student[0] }}
-
-            </div>
-
-
-            <!-- ================= EDIT FORM ================= -->
-
-            <form method="POST"
-                  action="/edit-student/{{ student[0] }}">
-
-
-                <!-- STUDENT NAME -->
+                <!-- Student Name -->
 
                 <div class="form-group">
 
@@ -444,15 +390,12 @@
 
                     <div class="input-wrapper">
 
-                        <span class="input-icon">
-                            👤
-                        </span>
+                        <span class="input-icon">👤</span>
 
                         <input
                             type="text"
                             id="name"
                             name="name"
-                            value="{{ student[3] }}"
                             placeholder="Enter student's full name"
                             required
                         >
@@ -462,7 +405,7 @@
                 </div>
 
 
-                <!-- ROLL NUMBER -->
+                <!-- Roll Number -->
 
                 <div class="form-group">
 
@@ -472,15 +415,12 @@
 
                     <div class="input-wrapper">
 
-                        <span class="input-icon">
-                            🆔
-                        </span>
+                        <span class="input-icon">🆔</span>
 
                         <input
                             type="text"
                             id="roll_no"
                             name="roll_no"
-                            value="{{ student[4] }}"
                             placeholder="Enter roll number"
                             required
                         >
@@ -494,7 +434,7 @@
                 </div>
 
 
-                <!-- USERNAME -->
+                <!-- Username -->
 
                 <div class="form-group">
 
@@ -504,15 +444,12 @@
 
                     <div class="input-wrapper">
 
-                        <span class="input-icon">
-                            🔑
-                        </span>
+                        <span class="input-icon">🔑</span>
 
                         <input
                             type="text"
                             id="username"
                             name="username"
-                            value="{{ student[1] }}"
                             placeholder="Enter login username"
                             required
                         >
@@ -520,13 +457,13 @@
                     </div>
 
                     <div class="help-text">
-                        This username is used by the student to log in.
+                        The student will use this username to log in.
                     </div>
 
                 </div>
 
 
-                <!-- PASSWORD -->
+                <!-- Password -->
 
                 <div class="form-group">
 
@@ -536,15 +473,12 @@
 
                     <div class="input-wrapper">
 
-                        <span class="input-icon">
-                            🔒
-                        </span>
+                        <span class="input-icon">🔒</span>
 
                         <input
                             type="password"
                             id="password"
                             name="password"
-                            value="{{ student[2] }}"
                             placeholder="Enter login password"
                             required
                         >
@@ -552,33 +486,25 @@
                     </div>
 
                     <div class="help-text">
-                        Update the password if required.
+                        This password will be used for student login.
                     </div>
 
                 </div>
 
 
-                <!-- ================= BUTTONS ================= -->
+                <!-- Buttons -->
 
                 <div class="buttons">
 
-                    <a href="/manage-students"
-                       class="btn btn-cancel">
-
+                    <a href="/manage-students" class="btn btn-cancel">
                         ↩ Cancel
-
                     </a>
 
-
-                    <button type="submit"
-                            class="btn btn-update">
-
-                        💾 Update Student
-
+                    <button type="submit" class="btn btn-success">
+                        ✅ Add Student
                     </button>
 
                 </div>
-
 
             </form>
 
@@ -590,14 +516,10 @@
     <!-- ================= FOOTER ================= -->
 
     <footer>
-
         © 2026 Student Attendance Management System
-
     </footer>
-
     {% include 'chatbot_widget.html' %}
 
 </body>
-
 </html>
 

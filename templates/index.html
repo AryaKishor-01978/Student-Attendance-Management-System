@@ -1,112 +1,625 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>Student Attendance Management System</title>
 
     <style>
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #eef3f8;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
         }
 
-        .header {
-            background: #1f4e79;
-            color: white;
-            text-align: center;
-            padding: 30px;
-        }
+        /* =========================
+           NAVBAR
+        ========================= */
 
-        .header h1 {
-            margin: 0;
-        }
-
-        .container {
-            width: 500px;
-            margin: 80px auto;
+        .navbar {
+            width: 100%;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             background: white;
-            padding: 40px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
         }
 
-        .container h2 {
-            color: #1f4e79;
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2563eb;
         }
 
-        .container p {
-            color: #666;
+        .nav-link {
+            text-decoration: none;
+            color: #374151;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            color: #2563eb;
+        }
+
+        /* =========================
+           HERO SECTION
+        ========================= */
+
+        .hero {
+            min-height: 520px;
+            padding: 70px 7%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 50px;
+            background: linear-gradient(
+                135deg,
+                #eff6ff,
+                #f5f3ff
+            );
+        }
+
+        .hero-content {
+            max-width: 620px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 20px;
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 18px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            color: #111827;
+        }
+
+        .hero h1 span {
+            color: #2563eb;
+        }
+
+        .hero p {
+            font-size: 18px;
+            line-height: 1.7;
+            color: #6b7280;
             margin-bottom: 30px;
         }
 
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
         .btn {
-            display: block;
-            width: 80%;
-            margin: 15px auto;
-            padding: 14px;
-            background: #1f4e79;
-            color: white;
+            display: inline-block;
+            padding: 13px 24px;
+            border-radius: 8px;
             text-decoration: none;
-            border-radius: 6px;
-            font-size: 17px;
+            font-weight: bold;
+            transition: 0.3s;
         }
 
-        .btn:hover {
-            background: #163a5c;
+        .teacher-btn {
+            background: #2563eb;
+            color: white;
         }
 
-        .footer {
+        .teacher-btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .student-btn {
+            background: white;
+            color: #2563eb;
+            border: 2px solid #2563eb;
+        }
+
+        .student-btn:hover {
+            background: #2563eb;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* =========================
+           HERO CARD
+        ========================= */
+
+        .hero-card {
+            width: 380px;
+            min-height: 330px;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 40px rgba(37, 99, 235, 0.15);
+        }
+
+        .hero-card-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            color: #111827;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            margin-bottom: 14px;
+            border-radius: 10px;
+            background: #f8fafc;
+        }
+
+        .stat-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #dbeafe;
+            font-size: 20px;
+        }
+
+        .stat-name {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .stat-value {
+            font-weight: bold;
+            color: #111827;
+        }
+
+        /* =========================
+           FEATURES
+        ========================= */
+
+        .features {
+            padding: 70px 7%;
+            background: white;
+        }
+
+        .section-title {
             text-align: center;
-            color: #777;
-            margin-top: 40px;
+            margin-bottom: 45px;
+        }
+
+        .section-title h2 {
+            font-size: 32px;
+            color: #111827;
+            margin-bottom: 10px;
+        }
+
+        .section-title p {
+            color: #6b7280;
+            font-size: 16px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 22px;
+        }
+
+        .feature-card {
+            padding: 28px 20px;
+            text-align: center;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            background: white;
+            transition: 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .feature-icon {
+            font-size: 35px;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 10px;
+            color: #111827;
+        }
+
+        .feature-card p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #6b7280;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            padding: 25px;
+            text-align: center;
+            background: #111827;
+            color: #d1d5db;
+            font-size: 14px;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 900px) {
+
+            .hero {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .buttons {
+                justify-content: center;
+            }
+
+            .hero-card {
+                width: 100%;
+                max-width: 450px;
+            }
+
+            .feature-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .navbar {
+                padding: 16px 5%;
+            }
+
+            .hero {
+                padding: 50px 5%;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
         }
 
     </style>
 
 </head>
 
+
 <body>
 
-    <div class="header">
 
-        <h1>Student Attendance Management System</h1>
+    <!-- =========================
+         NAVBAR
+    ========================= -->
 
-        <p>Manage and track student attendance easily</p>
+    <nav class="navbar">
 
-    </div>
+        <div class="logo">
+            📚 Attendance System
+        </div>
 
+        <a href="/teacher-login"
+           class="nav-link">
 
-    <div class="container">
-
-        <h2>Welcome</h2>
-
-        <p>Please select your login portal</p>
-
-
-        <a href="/teacher-login" class="btn">
             Teacher Login
+
         </a>
 
-
-        <a href="/student-login" class="btn">
-            Student Login
-        </a>
-
-    </div>
+    </nav>
 
 
-    <div class="footer">
+    <!-- =========================
+         HERO SECTION
+    ========================= -->
 
-        <p>© 2026 Student Attendance Management System</p>
+    <section class="hero">
 
-    </div>
+        <div class="hero-content">
 
+            <span class="tag">
+                SMART ATTENDANCE MANAGEMENT
+            </span>
+
+            <h1>
+                Student Attendance
+                <span>Management System</span>
+            </h1>
+
+            <p>
+                A simple and efficient system to manage
+                student attendance, view reports, track
+                attendance percentage and manage student
+                records easily.
+            </p>
+
+
+            <div class="buttons">
+
+                <a href="/teacher-login"
+                   class="btn teacher-btn">
+
+                    👨‍🏫 Teacher Login
+
+                </a>
+
+                <a href="/student-login"
+                   class="btn student-btn">
+
+                    👨‍🎓 Student Login
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             DASHBOARD PREVIEW
+        ========================= -->
+
+        <div class="hero-card">
+
+            <div class="hero-card-title">
+                📊 Attendance Overview
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-left">
+
+                    <div class="icon">
+                        👨‍🎓
+                    </div>
+
+                    <div>
+                        <div class="stat-name">
+                            Total Students
+                        </div>
+
+                        <div class="stat-value">
+                            Manage Students
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-left">
+
+                    <div class="icon">
+                        ✅
+                    </div>
+
+                    <div>
+                        <div class="stat-name">
+                            Attendance
+                        </div>
+
+                        <div class="stat-value">
+                            Present / Absent
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-left">
+
+                    <div class="icon">
+                        📈
+                    </div>
+
+                    <div>
+                        <div class="stat-name">
+                            Reports
+                        </div>
+
+                        <div class="stat-value">
+                            Attendance Percentage
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-left">
+
+                    <div class="icon">
+                        🔔
+                    </div>
+
+                    <div>
+                        <div class="stat-name">
+                            Notifications
+                        </div>
+
+                        <div class="stat-value">
+                            Attendance Updates
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         FEATURES
+    ========================= -->
+
+    <section class="features">
+
+        <div class="section-title">
+
+            <h2>
+                Everything You Need
+            </h2>
+
+            <p>
+                Manage attendance quickly and efficiently.
+            </p>
+
+        </div>
+
+
+        <div class="feature-grid">
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    📝
+                </div>
+
+                <h3>
+                    Mark Attendance
+                </h3>
+
+                <p>
+                    Easily mark and update attendance
+                    for students on a selected date.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    📊
+                </div>
+
+                <h3>
+                    Attendance Reports
+                </h3>
+
+                <p>
+                    View date-wise attendance reports
+                    and present/absent summaries.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    👥
+                </div>
+
+                <h3>
+                    Student Management
+                </h3>
+
+                <p>
+                    Add, edit, delete and search
+                    student records easily.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    📈
+                </div>
+
+                <h3>
+                    Attendance Tracking
+                </h3>
+
+                <p>
+                    Track attendance percentage and
+                    identify students below 75%.
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         FOOTER
+    ========================= -->
+
+    <footer>
+
+        © 2026 Student Attendance Management System
+
+    </footer>
+
+    {% include 'chatbot_widget.html' %}
+    
 </body>
 
 </html>
+```
