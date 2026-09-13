@@ -1,6 +1,7 @@
 ```html
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <title>Manage Students</title>
 
     <style>
+
         * {
             margin: 0;
             padding: 0;
@@ -21,9 +23,7 @@
             min-height: 100vh;
         }
 
-        /* =========================
-           NAVBAR
-        ========================= */
+        /* ================= NAVBAR ================= */
 
         .navbar {
             background: white;
@@ -65,19 +65,15 @@
             color: #dc2626 !important;
         }
 
-        /* =========================
-           MAIN CONTAINER
-        ========================= */
+        /* ================= MAIN ================= */
 
         .container {
             width: 90%;
-            max-width: 1200px;
+            max-width: 1250px;
             margin: 40px auto;
         }
 
-        /* =========================
-           PAGE HEADER
-        ========================= */
+        /* ================= PAGE HEADER ================= */
 
         .page-header {
             margin-bottom: 25px;
@@ -94,9 +90,7 @@
             font-size: 15px;
         }
 
-        /* =========================
-           FLASH MESSAGES
-        ========================= */
+        /* ================= FLASH MESSAGE ================= */
 
         .message {
             padding: 14px 18px;
@@ -118,9 +112,7 @@
             border: 1px solid #fde68a;
         }
 
-        /* =========================
-           TOP ACTION CARD
-        ========================= */
+        /* ================= ACTION CARD ================= */
 
         .action-card {
             background: white;
@@ -138,9 +130,7 @@
             flex-wrap: wrap;
         }
 
-        /* =========================
-           SEARCH
-        ========================= */
+        /* ================= SEARCH ================= */
 
         .search-form {
             display: flex;
@@ -167,6 +157,8 @@
             border-color: #2563eb;
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
+
+        /* ================= BUTTONS ================= */
 
         .btn {
             padding: 11px 19px;
@@ -210,9 +202,7 @@
             transform: translateY(-1px);
         }
 
-        /* =========================
-           STUDENT CARD
-        ========================= */
+        /* ================= STUDENT CARD ================= */
 
         .student-card {
             background: white;
@@ -244,9 +234,7 @@
             font-weight: 600;
         }
 
-        /* =========================
-           TABLE
-        ========================= */
+        /* ================= TABLE ================= */
 
         .table-container {
             overflow-x: auto;
@@ -255,7 +243,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 800px;
+            min-width: 1000px;
         }
 
         th {
@@ -284,6 +272,32 @@
             background: #f8fbff;
         }
 
+        /* ================= STUDENT PHOTO ================= */
+
+        .student-photo {
+            width: 65px;
+            height: 65px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid #e5e7eb;
+            display: block;
+            background: #f3f4f6;
+        }
+
+        .no-photo {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: #f3f4f6;
+            border: 3px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 25px;
+        }
+
+        /* ================= ROLL NUMBER ================= */
+
         .roll-badge {
             background: #eff6ff;
             color: #1d4ed8;
@@ -303,9 +317,7 @@
             color: #6b7280;
         }
 
-        /* =========================
-           ACTION BUTTONS
-        ========================= */
+        /* ================= ACTION BUTTONS ================= */
 
         .actions {
             display: flex;
@@ -343,9 +355,7 @@
             background: #fecaca;
         }
 
-        /* =========================
-           NO STUDENTS
-        ========================= */
+        /* ================= NO STUDENTS ================= */
 
         .no-students {
             text-align: center;
@@ -368,9 +378,7 @@
             margin-bottom: 20px;
         }
 
-        /* =========================
-           FOOTER
-        ========================= */
+        /* ================= FOOTER ================= */
 
         footer {
             text-align: center;
@@ -379,9 +387,7 @@
             font-size: 13px;
         }
 
-        /* =========================
-           RESPONSIVE
-        ========================= */
+        /* ================= RESPONSIVE ================= */
 
         @media (max-width: 768px) {
 
@@ -453,14 +459,14 @@
                 display: none;
             }
         }
+
     </style>
+
 </head>
 
 <body>
 
-    <!-- =========================
-         NAVBAR
-    ========================== -->
+    <!-- ================= NAVBAR ================= -->
 
     <nav class="navbar">
 
@@ -483,9 +489,7 @@
     </nav>
 
 
-    <!-- =========================
-         MAIN CONTENT
-    ========================== -->
+    <!-- ================= MAIN CONTENT ================= -->
 
     <div class="container">
 
@@ -504,9 +508,7 @@
         </div>
 
 
-        <!-- =========================
-             FLASH MESSAGES
-        ========================== -->
+        <!-- ================= FLASH MESSAGES ================= -->
 
         {% with messages = get_flashed_messages(with_categories=true) %}
 
@@ -525,9 +527,7 @@
         {% endwith %}
 
 
-        <!-- =========================
-             SEARCH + ADD STUDENT
-        ========================== -->
+        <!-- ================= SEARCH + ADD STUDENT ================= -->
 
         <div class="action-card">
 
@@ -583,9 +583,7 @@
         </div>
 
 
-        <!-- =========================
-             STUDENT TABLE
-        ========================== -->
+        <!-- ================= STUDENT TABLE ================= -->
 
         <div class="student-card">
 
@@ -611,6 +609,10 @@
                     <thead>
 
                         <tr>
+
+                            <th>
+                                Photo
+                            </th>
 
                             <th>
                                 Roll No
@@ -643,7 +645,30 @@
 
                         <tr>
 
-                            <!-- ROLL NUMBER -->
+                            <!-- ================= PHOTO ================= -->
+
+                            <td>
+
+                                {% if student[5] %}
+
+                                    <img
+                                        src="{{ url_for('static', filename=student[5]) }}"
+                                        alt="{{ student[3] }}"
+                                        class="student-photo"
+                                    >
+
+                                {% else %}
+
+                                    <div class="no-photo">
+                                        👤
+                                    </div>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- ================= ROLL NUMBER ================= -->
 
                             <td>
 
@@ -654,7 +679,7 @@
                             </td>
 
 
-                            <!-- NAME -->
+                            <!-- ================= NAME ================= -->
 
                             <td>
 
@@ -665,7 +690,7 @@
                             </td>
 
 
-                            <!-- USERNAME -->
+                            <!-- ================= USERNAME ================= -->
 
                             <td>
 
@@ -676,7 +701,7 @@
                             </td>
 
 
-                            <!-- PASSWORD -->
+                            <!-- ================= PASSWORD ================= -->
 
                             <td>
 
@@ -687,7 +712,7 @@
                             </td>
 
 
-                            <!-- ACTIONS -->
+                            <!-- ================= ACTIONS ================= -->
 
                             <td>
 
@@ -724,7 +749,7 @@
 
             {% else %}
 
-            <!-- NO STUDENTS -->
+            <!-- ================= NO STUDENTS ================= -->
 
             <div class="no-students">
 
@@ -737,12 +762,19 @@
                 </h3>
 
                 <p>
+
                     {% if search %}
+
                         No student matches your search "{{ search }}".
+
                     {% else %}
+
                         There are currently no students in the system.
+
                     {% endif %}
+
                 </p>
+
 
                 {% if search %}
 
@@ -773,17 +805,20 @@
     </div>
 
 
-    <!-- =========================
-         FOOTER
-    ========================== -->
+    <!-- ================= FOOTER ================= -->
 
     <footer>
 
         © 2026 Student Attendance Management System
 
     </footer>
-    {% include 'chatbot_widget.html' %}
-    
-</body>
-</html>
 
+
+    <!-- ================= CHATBOT ================= -->
+
+    {% include 'chatbot_widget.html' %}
+
+</body>
+
+</html>
+```

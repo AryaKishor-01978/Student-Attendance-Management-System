@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -86,6 +85,17 @@
             box-shadow: 0 8px 25px rgba(30, 58, 138, 0.20);
         }
 
+        .welcome-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 30px;
+        }
+
+        .welcome-text {
+            flex: 1;
+        }
+
         .welcome-card h1 {
             font-size: 28px;
             margin-bottom: 8px;
@@ -98,16 +108,61 @@
 
         .student-details {
             display: flex;
-            gap: 25px;
+            gap: 15px;
             flex-wrap: wrap;
             margin-top: 20px;
         }
 
         .detail-item {
-            background: rgba(255,255,255,0.12);
+            background: rgba(255, 255, 255, 0.12);
             padding: 10px 15px;
             border-radius: 8px;
             font-size: 14px;
+        }
+
+        /* ================= EDIT PROFILE BUTTON ================= */
+
+        .edit-profile-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 11px 18px;
+            background: white;
+            color: #1e3a8a;
+            text-decoration: none;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.3s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .edit-profile-btn:hover {
+            background: #eff6ff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.20);
+        }
+
+        /* ================= STUDENT PHOTO ================= */
+
+        .student-photo-container {
+            flex-shrink: 0;
+            text-align: center;
+        }
+
+        .student-photo {
+            width: 130px;
+            height: 130px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+            background: white;
+        }
+
+        .photo-label {
+            margin-top: 8px;
+            font-size: 12px;
+            opacity: 0.9;
         }
 
         /* ================= STAT CARDS ================= */
@@ -204,7 +259,6 @@
 
         .progress {
             height: 100%;
-            width: {{ percentage }}%;
             background: #2563eb;
             border-radius: 20px;
             transition: width 0.5s ease;
@@ -367,6 +421,11 @@
                 padding: 25px 20px;
             }
 
+            .welcome-content {
+                flex-direction: column-reverse;
+                text-align: center;
+            }
+
             .welcome-card h1 {
                 font-size: 23px;
             }
@@ -385,6 +444,11 @@
                 padding: 20px;
             }
 
+            .edit-profile-btn {
+                width: 100%;
+                text-align: center;
+            }
+
         }
 
     </style>
@@ -392,7 +456,6 @@
 </head>
 
 <body>
-
 
     <!-- ================= NAVBAR ================= -->
 
@@ -408,7 +471,7 @@
                 🏠 Home
             </a>
 
-            <a href="/student-login" class="logout">
+            <a href="/student-logout" class="logout">
                 🚪 Logout
             </a>
 
@@ -426,23 +489,76 @@
 
         <div class="welcome-card">
 
-            <h1>
-                👋 Welcome, {{ student[3] }}!
-            </h1>
+            <div class="welcome-content">
 
-            <p>
-                Here is your complete attendance overview.
-            </p>
+                <div class="welcome-text">
+
+                    <h1>
+                        👋 Welcome, {{ student[1] }}!
+                    </h1>
+
+                    <p>
+                        Here is your complete attendance overview.
+                    </p>
+
+                    <div class="student-details">
+
+                        <div class="detail-item">
+                            🆔 Roll No:
+                            <strong>{{ student[2] }}</strong>
+                        </div>
+
+                        <div class="detail-item">
+                            👤 Username:
+                            <strong>{{ student[3] }}</strong>
+                        </div>
+
+                    </div>
 
 
-            <div class="student-details">
+                    <!-- ================= EDIT PROFILE BUTTON ================= -->
 
-                <div class="detail-item">
-                    🆔 Roll No: <strong>{{ student[4] }}</strong>
+                    <a
+                        href="{{ url_for('student_profile', student_id=student[0]) }}"
+                        class="edit-profile-btn"
+                    >
+                        ✏️ Edit Profile
+                    </a>
+
                 </div>
 
-                <div class="detail-item">
-                    👤 Username: <strong>{{ student[1] }}</strong>
+
+                <!-- ================= STUDENT PHOTO ================= -->
+
+                <div class="student-photo-container">
+
+                    {% if student[4] %}
+
+                        <img
+                            src="{{ url_for('static', filename=student[4]) }}"
+                            alt="Student Face"
+                            class="student-photo"
+                        >
+
+                        <div class="photo-label">
+                            Student Photo
+                        </div>
+
+                    {% else %}
+
+                        <div
+                            class="student-photo"
+                            style="display:flex;align-items:center;justify-content:center;font-size:45px;"
+                        >
+                            👤
+                        </div>
+
+                        <div class="photo-label">
+                            No Photo
+                        </div>
+
+                    {% endif %}
+
                 </div>
 
             </div>
@@ -453,7 +569,6 @@
         <!-- ================= STATISTICS ================= -->
 
         <div class="stats">
-
 
             <!-- TOTAL CLASSES -->
 
@@ -489,7 +604,7 @@
                 <div class="stat-info">
 
                     <h3>
-                        {{ present }}
+                        {{ present_classes }}
                     </h3>
 
                     <p>
@@ -512,7 +627,7 @@
                 <div class="stat-info">
 
                     <h3>
-                        {{ absent }}
+                        {{ absent_classes }}
                     </h3>
 
                     <p>
@@ -524,7 +639,7 @@
             </div>
 
 
-            <!-- PERCENTAGE -->
+            <!-- ATTENDANCE PERCENTAGE -->
 
             <div class="stat-card">
 
@@ -535,7 +650,7 @@
                 <div class="stat-info">
 
                     <h3>
-                        {{ percentage }}%
+                        {{ attendance_percentage }}%
                     </h3>
 
                     <p>
@@ -545,7 +660,6 @@
                 </div>
 
             </div>
-
 
         </div>
 
@@ -561,7 +675,7 @@
                 </h2>
 
                 <div class="percentage-value">
-                    {{ percentage }}%
+                    {{ attendance_percentage }}%
                 </div>
 
             </div>
@@ -569,24 +683,30 @@
 
             <div class="progress-bar">
 
-                <div class="progress"></div>
+                <div
+                    class="progress"
+                    style="width: {{ attendance_percentage }}%;">
+                </div>
 
             </div>
 
 
             <div class="percentage-note">
 
-                {% if percentage < 75 %}
+                {% if attendance_percentage < 75 %}
 
-                    ⚠️ Your attendance is below 75%. Please attend more classes.
+                    ⚠️ Your attendance is below 75%.
+                    Please attend more classes.
 
-                {% elif percentage >= 75 and percentage < 85 %}
+                {% elif attendance_percentage >= 75 and attendance_percentage < 85 %}
 
-                    👍 Your attendance is satisfactory. Try to maintain or improve it.
+                    👍 Your attendance is satisfactory.
+                    Try to maintain or improve it.
 
                 {% else %}
 
-                    🎉 Excellent attendance! Keep it up.
+                    🎉 Excellent attendance!
+                    Keep it up.
 
                 {% endif %}
 
@@ -597,12 +717,16 @@
 
         <!-- ================= ATTENDANCE WARNING ================= -->
 
-        {% if percentage < 75 %}
+        {% if attendance_percentage < 75 %}
 
             <div class="warning-box">
 
                 ⚠️ <strong>Attendance Warning:</strong>
-                Your current attendance is {{ percentage }}%, which is below the required 75%.
+
+                Your current attendance is
+                {{ attendance_percentage }}%,
+                which is below the required 75%.
+
                 Please make sure to attend your upcoming classes regularly.
 
             </div>
@@ -612,7 +736,10 @@
             <div class="good-box">
 
                 ✅ <strong>Good Attendance:</strong>
-                Your attendance is {{ percentage }}%, which meets the minimum 75% requirement.
+
+                Your attendance is
+                {{ attendance_percentage }}%,
+                which meets the minimum 75% requirement.
 
             </div>
 
@@ -636,7 +763,12 @@
             </div>
 
 
-            {% if attendance %}
+            <!-- IMPORTANT:
+                 app.py sends attendance_history,
+                 NOT attendance
+            -->
+
+            {% if attendance_history %}
 
                 <table>
 
@@ -663,7 +795,7 @@
 
                     <tbody>
 
-                        {% for record in attendance %}
+                        {% for record in attendance_history %}
 
                             <tr>
 
@@ -714,16 +846,15 @@
                     </h3>
 
                     <p>
-                        Your attendance records will appear here once attendance is marked.
+                        Your attendance records will appear here
+                        once attendance is marked.
                     </p>
 
                 </div>
 
             {% endif %}
 
-
         </div>
-
 
     </div>
 
@@ -735,9 +866,12 @@
         © 2026 Student Attendance Management System
 
     </footer>
+
+
+    <!-- ================= CHATBOT ================= -->
+
     {% include 'chatbot_widget.html' %}
 
 </body>
 
 </html>
-

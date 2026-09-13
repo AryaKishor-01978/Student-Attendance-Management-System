@@ -5,7 +5,10 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Student Registration</title>
 
@@ -13,48 +16,47 @@
 
         * {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
         }
 
         body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(
+                135deg,
+                #eef2ff,
+                #f8fafc
+            );
             min-height: 100vh;
             display: flex;
-            justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            padding: 20px;
+            justify-content: center;
+            padding: 30px 15px;
         }
 
-        .register-container {
+        .container {
             width: 100%;
-            max-width: 450px;
-        }
-
-        .register-card {
+            max-width: 520px;
             background: white;
             padding: 35px;
             border-radius: 18px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .icon {
-            text-align: center;
-            font-size: 55px;
-            margin-bottom: 10px;
+            box-shadow: 0 15px 40px rgba(
+                0,
+                0,
+                0,
+                0.12
+            );
         }
 
         h1 {
             text-align: center;
-            color: #333;
             margin-bottom: 8px;
+            color: #1e293b;
         }
 
         .subtitle {
             text-align: center;
-            color: #777;
-            margin-bottom: 25px;
+            color: #64748b;
+            margin-bottom: 28px;
         }
 
         .form-group {
@@ -63,242 +65,947 @@
 
         label {
             display: block;
-            margin-bottom: 7px;
             font-weight: bold;
-            color: #444;
+            margin-bottom: 7px;
+            color: #334155;
         }
 
-        input {
+        input[type="text"],
+        input[type="password"],
+        input[type="tel"],
+        input[type="file"] {
             width: 100%;
-            padding: 13px;
-            border: 1px solid #ddd;
+            padding: 12px 14px;
+            border: 1px solid #cbd5e1;
             border-radius: 9px;
             font-size: 15px;
             outline: none;
         }
 
         input:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(
+                79,
+                70,
+                229,
+                0.1
+            );
+        }
+
+        .phone-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .phone-row input {
+            flex: 1;
         }
 
         button {
-            width: 100%;
-            padding: 14px;
             border: none;
             border-radius: 9px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            font-size: 16px;
+            padding: 12px 18px;
+            font-size: 14px;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 5px;
         }
 
-        button:hover {
-            opacity: 0.9;
+        .send-btn {
+            background: #4f46e5;
+            color: white;
+            white-space: nowrap;
         }
 
-        .flash-message {
-            background: #ffe6e6;
-            color: #c62828;
+        .send-btn:hover {
+            background: #4338ca;
+        }
+
+        .verify-btn {
+            background: #16a34a;
+            color: white;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .verify-btn:hover {
+            background: #15803d;
+        }
+
+        .register-btn {
+            width: 100%;
+            background: #0f172a;
+            color: white;
+            padding: 14px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .register-btn:hover {
+            background: #1e293b;
+        }
+
+        .register-btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .otp-section {
+            display: none;
+            margin-top: 12px;
+            padding: 15px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+        }
+
+        .otp-section.show {
+            display: block;
+        }
+
+        .verification-status {
+            margin-top: 10px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .success {
+            color: #15803d;
+        }
+
+        .error {
+            color: #dc2626;
+        }
+
+        .photo-preview {
+            display: none;
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin: 15px auto;
+            border: 4px solid #4f46e5;
+        }
+
+        .flash-messages {
+            margin-bottom: 20px;
+        }
+
+        .flash {
             padding: 12px;
             border-radius: 8px;
-            margin-bottom: 18px;
-            text-align: center;
+            background: #fee2e2;
+            color: #991b1b;
+            margin-bottom: 8px;
+            font-size: 14px;
         }
 
         .login-link {
             text-align: center;
-            margin-top: 22px;
-            color: #666;
+            margin-top: 20px;
+            color: #64748b;
         }
 
         .login-link a {
-            color: #667eea;
+            color: #4f46e5;
             font-weight: bold;
             text-decoration: none;
         }
 
-        .login-link a:hover {
-            text-decoration: underline;
+        .small-text {
+            color: #64748b;
+            font-size: 12px;
+            margin-top: 6px;
         }
 
-        .back-link {
-            text-align: center;
-            margin-top: 15px;
+        .verified-badge {
+            display: none;
+            color: #15803d;
+            font-weight: bold;
+            margin-top: 8px;
         }
 
-        .back-link a {
-            color: #777;
-            text-decoration: none;
-        }
-
-        .back-link a:hover {
-            color: #667eea;
+        .verified-badge.show {
+            display: block;
         }
 
     </style>
 
 </head>
 
+
 <body>
 
-    <div class="register-container">
+<div class="container">
 
-        <div class="register-card">
+    <h1>Student Registration</h1>
 
-            <div class="icon">🎓</div>
-
-            <h1>Student Registration</h1>
-
-            <p class="subtitle">
-                Create your student account
-            </p>
-
-
-            <!-- Flash Messages -->
-            {% with messages = get_flashed_messages() %}
-
-                {% if messages %}
-
-                    {% for message in messages %}
-
-                        <div class="flash-message">
-                            {{ message }}
-                        </div>
-
-                    {% endfor %}
-
-                {% endif %}
-
-            {% endwith %}
-
-
-            <!-- Registration Form -->
-            <form method="POST" action="/student-register">
-
-                <div class="form-group">
-
-                    <label for="name">
-                        Full Name
-                    </label>
-
-                    <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        placeholder="Enter your full name"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="roll_no">
-                        Roll Number
-                    </label>
-
-                    <input
-                        type="text"
-                        id="roll_no"
-                        name="roll_no"
-                        placeholder="Enter your roll number"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="username">
-                        Username
-                    </label>
-
-                    <input
-                        type="text"
-                        id="username"
-                        name="username"
-                        placeholder="Create a username"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="password">
-                        Password
-                    </label>
-
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        placeholder="Create a password"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="confirm_password">
-                        Confirm Password
-                    </label>
-
-                    <input
-                        type="password"
-                        id="confirm_password"
-                        name="confirm_password"
-                        placeholder="Confirm your password"
-                        required
-                    >
-
-                </div>
-
-
-                <button type="submit">
-                    📝 Create Student Account
-                </button>
-
-            </form>
-
-
-            <div class="login-link">
-
-                Already have an account?
-
-                <a href="/student-login">
-                    Login here
-                </a>
-
-            </div>
-
-
-            <div class="back-link">
-
-                <a href="/">
-                    ← Back to Home
-                </a>
-
-            </div>
-
-        </div>
-
+    <div class="subtitle">
+        Create your student account
     </div>
 
 
-    <!-- 24/7 Chatbot -->
-    {% include 'chatbot_widget.html' %}
+    <!-- =====================================================
+         FLASH MESSAGES
+         ===================================================== -->
+
+    {% with messages = get_flashed_messages() %}
+
+        {% if messages %}
+
+            <div class="flash-messages">
+
+                {% for message in messages %}
+
+                    <div class="flash">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <!-- =====================================================
+         REGISTRATION FORM
+         ===================================================== -->
+
+    <form
+        method="POST"
+        action="/student-register"
+        enctype="multipart/form-data"
+        id="registrationForm"
+    >
+
+
+        <!-- NAME -->
+
+        <div class="form-group">
+
+            <label for="name">
+                Full Name
+            </label>
+
+            <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Enter your full name"
+                required
+            >
+
+        </div>
+
+
+        <!-- ROLL NUMBER -->
+
+        <div class="form-group">
+
+            <label for="roll_no">
+                Roll Number
+            </label>
+
+            <input
+                type="text"
+                id="roll_no"
+                name="roll_no"
+                placeholder="Enter your roll number"
+                required
+            >
+
+        </div>
+
+
+        <!-- USERNAME -->
+
+        <div class="form-group">
+
+            <label for="username">
+                Username
+            </label>
+
+            <input
+                type="text"
+                id="username"
+                name="username"
+                placeholder="Create a username"
+                required
+            >
+
+        </div>
+
+
+        <!-- =================================================
+             PHONE NUMBER
+             ================================================= -->
+
+        <div class="form-group">
+
+            <label for="phone_number">
+                Mobile Number
+            </label>
+
+            <div class="phone-row">
+
+                <input
+                    type="tel"
+                    id="phone_number"
+                    name="phone_number"
+                    placeholder="Enter 10-digit mobile number"
+                    maxlength="10"
+                    pattern="[6-9][0-9]{9}"
+                    required
+                >
+
+                <button
+                    type="button"
+                    class="send-btn"
+                    id="sendOtpBtn"
+                    onclick="sendOTP()"
+                >
+                    Send OTP
+                </button>
+
+            </div>
+
+            <div class="small-text">
+                OTP will be sent to this mobile number.
+            </div>
+
+            <div
+                id="phoneStatus"
+                class="verification-status"
+            ></div>
+
+        </div>
+
+
+        <!-- =================================================
+             OTP SECTION
+             ================================================= -->
+
+        <div
+            class="otp-section"
+            id="otpSection"
+        >
+
+            <label for="otp">
+                Enter OTP
+            </label>
+
+            <input
+                type="text"
+                id="otp"
+                name="otp"
+                placeholder="Enter 6-digit OTP"
+                maxlength="6"
+                inputmode="numeric"
+            >
+
+            <button
+                type="button"
+                class="verify-btn"
+                id="verifyOtpBtn"
+                onclick="verifyOTP()"
+            >
+                Verify OTP
+            </button>
+
+            <div
+                id="otpStatus"
+                class="verification-status"
+            ></div>
+
+        </div>
+
+
+        <!-- VERIFIED BADGE -->
+
+        <div
+            id="verifiedBadge"
+            class="verified-badge"
+        >
+            ✓ Mobile number verified
+        </div>
+
+
+        <!-- PASSWORD -->
+
+        <div class="form-group">
+
+            <label for="password">
+                Password
+            </label>
+
+            <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Create a password"
+                required
+            >
+
+        </div>
+
+
+        <!-- CONFIRM PASSWORD -->
+
+        <div class="form-group">
+
+            <label for="confirm_password">
+                Confirm Password
+            </label>
+
+            <input
+                type="password"
+                id="confirm_password"
+                name="confirm_password"
+                placeholder="Confirm your password"
+                required
+            >
+
+        </div>
+
+
+        <!-- =================================================
+             FACE PHOTO
+             ================================================= -->
+
+        <div class="form-group">
+
+            <label for="face_image">
+                Face Photo
+            </label>
+
+            <input
+                type="file"
+                id="face_image"
+                name="face_image"
+                accept="image/png, image/jpeg, image/jpg"
+                required
+            >
+
+            <div class="small-text">
+                Upload a clear JPG, JPEG or PNG photo.
+            </div>
+
+            <img
+                id="photoPreview"
+                class="photo-preview"
+                alt="Photo Preview"
+            >
+
+        </div>
+
+
+        <!-- =================================================
+             REGISTER BUTTON
+             ================================================= -->
+
+        <button
+            type="submit"
+            class="register-btn"
+            id="registerBtn"
+            disabled
+        >
+            Register Student
+        </button>
+
+
+    </form>
+
+
+    <div class="login-link">
+
+        Already have an account?
+
+        <a href="/student-login">
+            Login here
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+     ========================================================= -->
+
+<script>
+
+
+// =========================================================
+// VARIABLES
+// =========================================================
+
+let phoneVerified = false;
+
+
+// =========================================================
+// PHONE NUMBER INPUT
+// =========================================================
+
+document
+    .getElementById("phone_number")
+    .addEventListener(
+        "input",
+        function () {
+
+            // Only numbers
+            this.value = this.value.replace(
+                /[^0-9]/g,
+                ""
+            );
+
+            // Maximum 10 digits
+            if (this.value.length > 10) {
+
+                this.value =
+                    this.value.substring(
+                        0,
+                        10
+                    );
+
+            }
+
+            // If phone changes after verification,
+            // verification must be done again.
+            phoneVerified = false;
+
+            document
+                .getElementById("verifiedBadge")
+                .classList
+                .remove("show");
+
+            document
+                .getElementById("registerBtn")
+                .disabled = true;
+
+        }
+    );
+
+
+// =========================================================
+// SEND OTP
+// =========================================================
+
+async function sendOTP() {
+
+    const phoneInput =
+        document.getElementById(
+            "phone_number"
+        );
+
+    const phone =
+        phoneInput.value.trim();
+
+    const sendButton =
+        document.getElementById(
+            "sendOtpBtn"
+        );
+
+    const phoneStatus =
+        document.getElementById(
+            "phoneStatus"
+        );
+
+    const otpSection =
+        document.getElementById(
+            "otpSection"
+        );
+
+
+    // Validate phone
+    if (
+        phone.length !== 10
+        ||
+        !/^[6-9][0-9]{9}$/.test(phone)
+    ) {
+
+        phoneStatus.textContent =
+            "Please enter a valid 10-digit Indian mobile number.";
+
+        phoneStatus.className =
+            "verification-status error";
+
+        return;
+    }
+
+
+    sendButton.disabled = true;
+
+    sendButton.textContent =
+        "Sending...";
+
+    phoneStatus.textContent =
+        "Sending OTP...";
+
+    phoneStatus.className =
+        "verification-status";
+
+
+    try {
+
+        const formData =
+            new FormData();
+
+        formData.append(
+            "phone_number",
+            phone
+        );
+
+
+        const response =
+            await fetch(
+                "/send-otp",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (data.success) {
+
+            otpSection.classList.add(
+                "show"
+            );
+
+            phoneStatus.textContent =
+                "OTP sent successfully.";
+
+            phoneStatus.className =
+                "verification-status success";
+
+
+            document
+                .getElementById("otp")
+                .focus();
+
+
+            sendButton.textContent =
+                "OTP Sent";
+
+
+        } else {
+
+            phoneStatus.textContent =
+                data.message ||
+                "Could not send OTP.";
+
+            phoneStatus.className =
+                "verification-status error";
+
+            sendButton.disabled = false;
+
+            sendButton.textContent =
+                "Send OTP";
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "Send OTP error:",
+            error
+        );
+
+        phoneStatus.textContent =
+            "Something went wrong. Please try again.";
+
+        phoneStatus.className =
+            "verification-status error";
+
+        sendButton.disabled = false;
+
+        sendButton.textContent =
+            "Send OTP";
+    }
+
+}
+
+
+// =========================================================
+// VERIFY OTP
+// =========================================================
+
+async function verifyOTP() {
+
+    const phone =
+        document
+            .getElementById(
+                "phone_number"
+            )
+            .value
+            .trim();
+
+    const otp =
+        document
+            .getElementById(
+                "otp"
+            )
+            .value
+            .trim();
+
+    const verifyButton =
+        document.getElementById(
+            "verifyOtpBtn"
+        );
+
+    const otpStatus =
+        document.getElementById(
+            "otpStatus"
+        );
+
+    const verifiedBadge =
+        document.getElementById(
+            "verifiedBadge"
+        );
+
+    const registerButton =
+        document.getElementById(
+            "registerBtn"
+        );
+
+
+    if (!otp) {
+
+        otpStatus.textContent =
+            "Please enter the OTP.";
+
+        otpStatus.className =
+            "verification-status error";
+
+        return;
+    }
+
+
+    if (!/^[0-9]{4,8}$/.test(otp)) {
+
+        otpStatus.textContent =
+            "Please enter a valid OTP.";
+
+        otpStatus.className =
+            "verification-status error";
+
+        return;
+    }
+
+
+    verifyButton.disabled = true;
+
+    verifyButton.textContent =
+        "Verifying...";
+
+    otpStatus.textContent =
+        "Verifying OTP...";
+
+    otpStatus.className =
+        "verification-status";
+
+
+    try {
+
+        const formData =
+            new FormData();
+
+        formData.append(
+            "phone_number",
+            phone
+        );
+
+        formData.append(
+            "otp",
+            otp
+        );
+
+
+        const response =
+            await fetch(
+                "/verify-otp",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (data.success) {
+
+            phoneVerified = true;
+
+
+            otpStatus.textContent =
+                data.message ||
+                "Phone number verified successfully!";
+
+            otpStatus.className =
+                "verification-status success";
+
+
+            verifiedBadge.classList.add(
+                "show"
+            );
+
+
+            registerButton.disabled =
+                false;
+
+
+            verifyButton.textContent =
+                "Verified";
+
+
+            verifyButton.disabled =
+                true;
+
+
+            document
+                .getElementById(
+                    "phone_number"
+                )
+                .readOnly = true;
+
+
+        } else {
+
+            phoneVerified = false;
+
+            registerButton.disabled =
+                true;
+
+
+            otpStatus.textContent =
+                data.message ||
+                "Invalid OTP.";
+
+            otpStatus.className =
+                "verification-status error";
+
+
+            verifyButton.disabled =
+                false;
+
+            verifyButton.textContent =
+                "Verify OTP";
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "Verify OTP error:",
+            error
+        );
+
+
+        otpStatus.textContent =
+            "Something went wrong. Please try again.";
+
+        otpStatus.className =
+            "verification-status error";
+
+
+        verifyButton.disabled =
+            false;
+
+        verifyButton.textContent =
+            "Verify OTP";
+    }
+
+}
+
+
+// =========================================================
+// PHOTO PREVIEW
+// =========================================================
+
+document
+    .getElementById("face_image")
+    .addEventListener(
+        "change",
+        function (event) {
+
+            const file =
+                event.target.files[0];
+
+            const preview =
+                document.getElementById(
+                    "photoPreview"
+                );
+
+
+            if (!file) {
+
+                preview.style.display =
+                    "none";
+
+                return;
+            }
+
+
+            const reader =
+                new FileReader();
+
+
+            reader.onload =
+                function (e) {
+
+                    preview.src =
+                        e.target.result;
+
+                    preview.style.display =
+                        "block";
+                };
+
+
+            reader.readAsDataURL(
+                file
+            );
+
+        }
+    );
+
+
+// =========================================================
+// PREVENT REGISTRATION WITHOUT OTP
+// =========================================================
+
+document
+    .getElementById("registrationForm")
+    .addEventListener(
+        "submit",
+        function (event) {
+
+            if (!phoneVerified) {
+
+                event.preventDefault();
+
+                alert(
+                    "Please verify your mobile number with OTP before registering."
+                );
+
+                return false;
+            }
+
+        }
+    );
+
+</script>
 
 
 </body>
 
 </html>
-

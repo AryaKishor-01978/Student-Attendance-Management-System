@@ -1,12 +1,15 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Attendance Report</title>
 
     <style>
+
         * {
             margin: 0;
             padding: 0;
@@ -21,6 +24,7 @@
         }
 
         /* NAVBAR */
+
         .navbar {
             background: white;
             padding: 16px 6%;
@@ -56,6 +60,7 @@
         }
 
         /* MAIN */
+
         .container {
             width: 90%;
             max-width: 1200px;
@@ -78,6 +83,7 @@
         }
 
         /* FILTER CARD */
+
         .filter-card {
             background: white;
             padding: 25px;
@@ -157,6 +163,7 @@
         }
 
         /* SUMMARY CARDS */
+
         .summary {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -193,6 +200,7 @@
         }
 
         /* REPORT CARD */
+
         .report-card {
             background: white;
             border-radius: 16px;
@@ -225,6 +233,7 @@
         }
 
         /* TABLE */
+
         .table-container {
             overflow-x: auto;
         }
@@ -232,7 +241,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 650px;
+            min-width: 750px;
         }
 
         th {
@@ -250,11 +259,37 @@
             padding: 15px;
             border-bottom: 1px solid #f0f2f5;
             font-size: 14px;
+            vertical-align: middle;
         }
 
         tbody tr:hover {
             background: #f8fbff;
         }
+
+        /* STUDENT PHOTO */
+
+        .student-photo {
+            width: 52px;
+            height: 52px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid #e5e7eb;
+            display: block;
+        }
+
+        .no-photo {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 23px;
+            border: 2px solid #e5e7eb;
+        }
+
+        /* STATUS */
 
         .status {
             padding: 6px 12px;
@@ -274,6 +309,8 @@
             color: #b91c1c;
         }
 
+        /* NO RECORDS */
+
         .no-records {
             text-align: center;
             padding: 45px 20px;
@@ -285,7 +322,13 @@
             margin-bottom: 10px;
         }
 
+        .no-records h3 {
+            margin-bottom: 8px;
+            color: #374151;
+        }
+
         /* FOOTER */
+
         footer {
             text-align: center;
             padding: 30px 15px;
@@ -294,7 +337,9 @@
         }
 
         /* RESPONSIVE */
+
         @media (max-width: 768px) {
+
             .navbar {
                 padding: 15px 4%;
             }
@@ -333,40 +378,78 @@
             .btn {
                 text-align: center;
             }
+
         }
+
     </style>
+
 </head>
 
 <body>
 
+
     <!-- NAVBAR -->
+
     <nav class="navbar">
-        <div class="logo">📚 Attendance Management System</div>
+
+        <div class="logo">
+            📚 Attendance Management System
+        </div>
 
         <div class="nav-links">
-            <a href="/teacher-dashboard">Dashboard</a>
-            <a href="/" class="logout">Logout</a>
+
+            <a href="/teacher-dashboard">
+                Dashboard
+            </a>
+
+            <a href="/" class="logout">
+                Logout
+            </a>
+
         </div>
+
     </nav>
 
 
     <!-- MAIN CONTENT -->
+
     <div class="container">
 
+
+        <!-- PAGE HEADER -->
+
         <div class="page-header">
-            <h1>📊 Attendance Report</h1>
-            <p>View and analyze student attendance records by date.</p>
+
+            <h1>
+                📊 Attendance Report
+            </h1>
+
+            <p>
+                View and analyze student attendance records by date.
+            </p>
+
         </div>
 
 
         <!-- DATE FILTER -->
-        <div class="filter-card">
-            <h2>🔎 Filter Attendance</h2>
 
-            <form method="GET" action="/attendance-report" class="filter-form">
+        <div class="filter-card">
+
+            <h2>
+                🔎 Filter Attendance
+            </h2>
+
+            <form
+                method="GET"
+                action="/attendance-report"
+                class="filter-form"
+            >
 
                 <div class="form-group">
-                    <label for="date">Select Date</label>
+
+                    <label for="date">
+                        Select Date
+                    </label>
 
                     <input
                         type="date"
@@ -374,44 +457,82 @@
                         name="date"
                         value="{{ selected_date }}"
                     >
+
                 </div>
 
-                <button type="submit" class="btn btn-primary">
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
                     View Report
                 </button>
 
-                <a href="/attendance-report" class="btn btn-secondary">
+
+                <a
+                    href="/attendance-report"
+                    class="btn btn-secondary"
+                >
                     Show All
                 </a>
 
             </form>
+
         </div>
 
 
         <!-- SUMMARY -->
+
         {% if selected_date %}
 
         <div class="summary">
 
+
+            <!-- SELECTED DATE -->
+
             <div class="summary-card">
-                <div class="summary-title">📅 Selected Date</div>
-                <div class="summary-number" style="font-size: 22px;">
+
+                <div class="summary-title">
+                    📅 Selected Date
+                </div>
+
+                <div
+                    class="summary-number"
+                    style="font-size: 22px;"
+                >
                     {{ selected_date }}
                 </div>
+
             </div>
 
+
+            <!-- PRESENT -->
+
             <div class="summary-card present">
-                <div class="summary-title">✅ Present Students</div>
+
+                <div class="summary-title">
+                    ✅ Present Students
+                </div>
+
                 <div class="summary-number">
                     {{ present_count }}
                 </div>
+
             </div>
 
+
+            <!-- ABSENT -->
+
             <div class="summary-card absent">
-                <div class="summary-title">❌ Absent Students</div>
+
+                <div class="summary-title">
+                    ❌ Absent Students
+                </div>
+
                 <div class="summary-number">
                     {{ absent_count }}
                 </div>
+
             </div>
 
         </div>
@@ -420,16 +541,25 @@
 
 
         <!-- REPORT TABLE -->
+
         <div class="report-card">
 
+
             <div class="report-header">
-                <h2>Attendance Records</h2>
+
+                <h2>
+                    Attendance Records
+                </h2>
+
 
                 {% if selected_date %}
-                    <span class="date-badge">
-                        📅 {{ selected_date }}
-                    </span>
+
+                <span class="date-badge">
+                    📅 {{ selected_date }}
+                </span>
+
                 {% endif %}
+
             </div>
 
 
@@ -439,14 +569,39 @@
 
                 <table>
 
+
+                    <!-- TABLE HEADER -->
+
                     <thead>
+
                         <tr>
-                            <th>Roll No</th>
-                            <th>Student Name</th>
-                            <th>Date</th>
-                            <th>Status</th>
+
+                            <th>
+                                Photo
+                            </th>
+
+                            <th>
+                                Roll No
+                            </th>
+
+                            <th>
+                                Student Name
+                            </th>
+
+                            <th>
+                                Date
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
                         </tr>
+
                     </thead>
+
+
+                    <!-- TABLE BODY -->
 
                     <tbody>
 
@@ -454,35 +609,79 @@
 
                         <tr>
 
-                            <td>
-                                <strong>{{ record[0] }}</strong>
-                            </td>
 
-                            <td>
-                                {{ record[1] }}
-                            </td>
-
-                            <td>
-                                {{ record[2] }}
-                            </td>
+                            <!-- PHOTO -->
 
                             <td>
 
-                                {% if record[3] == "Present" %}
+                                {% if record[3] %}
 
-                                    <span class="status present">
-                                        ✅ Present
-                                    </span>
+                                <img
+                                    src="{{ url_for('static', filename=record[3]) }}"
+                                    alt="{{ record[1] }}"
+                                    class="student-photo"
+                                >
 
                                 {% else %}
 
-                                    <span class="status absent">
-                                        ❌ Absent
-                                    </span>
+                                <div class="no-photo">
+                                    👤
+                                </div>
 
                                 {% endif %}
 
                             </td>
+
+
+                            <!-- ROLL NUMBER -->
+
+                            <td>
+
+                                <strong>
+                                    {{ record[2] }}
+                                </strong>
+
+                            </td>
+
+
+                            <!-- STUDENT NAME -->
+
+                            <td>
+
+                                {{ record[1] }}
+
+                            </td>
+
+
+                            <!-- DATE -->
+
+                            <td>
+
+                                {{ record[4] }}
+
+                            </td>
+
+
+                            <!-- STATUS -->
+
+                            <td>
+
+                                {% if record[5] == "Present" %}
+
+                                <span class="status present">
+                                    ✅ Present
+                                </span>
+
+                                {% else %}
+
+                                <span class="status absent">
+                                    ❌ Absent
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
 
                         </tr>
 
@@ -494,18 +693,29 @@
 
             </div>
 
+
             {% else %}
 
-            <div class="no-records">
-                <div class="icon">📭</div>
 
-                <h3>No Attendance Records Found</h3>
+            <!-- NO RECORDS -->
+
+            <div class="no-records">
+
+                <div class="icon">
+                    📭
+                </div>
+
+                <h3>
+                    No Attendance Records Found
+                </h3>
 
                 <p>
                     There are no attendance records available
                     for the selected date.
                 </p>
+
             </div>
+
 
             {% endif %}
 
@@ -515,11 +725,19 @@
 
 
     <!-- FOOTER -->
+
     <footer>
+
         © 2026 Student Attendance Management System
+
     </footer>
+
+
+    <!-- CHATBOT -->
+
     {% include 'chatbot_widget.html' %}
 
-</body>
-</html>
 
+</body>
+
+</html>

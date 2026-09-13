@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Student Profile</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #eef2ff, #f8fafc);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.10);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+
+        .photo-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-photo {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #e2e8f0;
+            display: block;
+            margin: 0 auto 15px;
+        }
+
+        .no-photo {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 55px;
+            margin: 0 auto 15px;
+        }
+
+        .photo-label {
+            font-weight: bold;
+            color: #334155;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            color: #334155;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="file"] {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #6366f1;
+        }
+
+        .hint {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 6px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        button,
+        .back-button {
+            flex: 1;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        button {
+            border: none;
+            background: #4f46e5;
+            color: white;
+        }
+
+        button:hover {
+            background: #4338ca;
+        }
+
+        .back-button {
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+        .back-button:hover {
+            background: #cbd5e1;
+        }
+
+        .flash {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .preview {
+            display: none;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #c7d2fe;
+            margin: 15px auto;
+        }
+
+        @media (max-width: 600px) {
+
+            .card {
+                padding: 25px 20px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>✏️ Edit Profile</h1>
+
+        <p class="subtitle">
+            Update your personal details and profile photo
+        </p>
+
+
+        <!-- FLASH MESSAGES -->
+
+        {% with messages = get_flashed_messages() %}
+
+            {% if messages %}
+
+                {% for message in messages %}
+
+                    <div class="flash">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <!-- CURRENT PHOTO -->
+
+        <div class="photo-section">
+
+            {% if student[5] %}
+
+                <img
+                    src="{{ url_for('static', filename=student[5]) }}"
+                    alt="Current Profile Photo"
+                    class="profile-photo"
+                    id="currentPhoto"
+                >
+
+            {% else %}
+
+                <div
+                    class="no-photo"
+                    id="currentPhoto"
+                >
+                    👤
+                </div>
+
+            {% endif %}
+
+            <div class="photo-label">
+                Current Profile Photo
+            </div>
+
+        </div>
+
+
+        <!-- PROFILE FORM -->
+
+        <form
+            method="POST"
+            enctype="multipart/form-data"
+        >
+
+
+            <!-- NAME -->
+
+            <div class="form-group">
+
+                <label for="name">
+                    👤 Full Name
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value="{{ student[1] }}"
+                    required
+                >
+
+            </div>
+
+
+            <!-- ROLL NUMBER -->
+
+            <div class="form-group">
+
+                <label for="roll_no">
+                    🆔 Roll Number
+                </label>
+
+                <input
+                    type="text"
+                    id="roll_no"
+                    name="roll_no"
+                    value="{{ student[2] }}"
+                    required
+                >
+
+            </div>
+
+
+            <!-- USERNAME -->
+
+            <div class="form-group">
+
+                <label for="username">
+                    👤 Username
+                </label>
+
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    value="{{ student[3] }}"
+                    required
+                >
+
+            </div>
+
+
+            <!-- PASSWORD -->
+
+            <div class="form-group">
+
+                <label for="password">
+                    🔐 New Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Leave blank to keep current password"
+                >
+
+                <div class="hint">
+                    Leave this field blank if you do not want to change your password.
+                </div>
+
+            </div>
+
+
+            <!-- PHOTO -->
+
+            <div class="form-group">
+
+                <label for="face_image">
+                    📸 Change Profile Photo
+                </label>
+
+                <input
+                    type="file"
+                    id="face_image"
+                    name="face_image"
+                    accept="image/png, image/jpeg, image/jpg"
+                >
+
+                <div class="hint">
+                    JPG, JPEG or PNG only.
+                </div>
+
+                <img
+                    id="preview"
+                    class="preview"
+                    alt="New Photo Preview"
+                >
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="buttons">
+
+                <a
+                    href="{{ url_for('student_dashboard', student_id=student[0]) }}"
+                    class="back-button"
+                >
+                    ← Back
+                </a>
+
+                <button type="submit">
+                    💾 Update Profile
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    const photoInput =
+        document.getElementById("face_image");
+
+    const preview =
+        document.getElementById("preview");
+
+
+    photoInput.addEventListener(
+        "change",
+        function () {
+
+            const file = this.files[0];
+
+            if (file) {
+
+                const reader =
+                    new FileReader();
+
+                reader.onload =
+                    function (event) {
+
+                        preview.src =
+                            event.target.result;
+
+                        preview.style.display =
+                            "block";
+
+                    };
+
+                reader.readAsDataURL(file);
+
+            } else {
+
+                preview.style.display =
+                    "none";
+
+            }
+
+        }
+    );
+
+</script>
+
+</body>
+
+</html>
