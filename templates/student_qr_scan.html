@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Scan QR Attendance</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: #111827;
+            color: white;
+            padding: 18px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .back-btn {
+            color: white;
+            text-decoration: none;
+            background: #374151;
+            padding: 9px 15px;
+            border-radius: 8px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 650px;
+            margin: 45px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .card h1 {
+            margin-top: 0;
+            color: #111827;
+        }
+
+        .card p {
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        #reader {
+            width: 100%;
+            max-width: 500px;
+            margin: 25px auto;
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 14px;
+            border-radius: 10px;
+            background: #eff6ff;
+            color: #1e40af;
+            font-weight: 600;
+        }
+
+        .dashboard-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 20px;
+            background: #111827;
+            color: white;
+            text-decoration: none;
+            border-radius: 9px;
+        }
+
+    </style>
+
+    <!-- QR Scanner Library -->
+
+    <script
+        src="https://unpkg.com/html5-qrcode"
+        type="text/javascript">
+    </script>
+
+</head>
+
+
+<body>
+
+    <div class="navbar">
+
+        <h2>
+            📱 QR Attendance Scanner
+        </h2>
+
+        <a
+            href="/student-dashboard/{{ session['student_id'] }}"
+            class="back-btn"
+        >
+            Dashboard
+        </a>
+
+    </div>
+
+
+    <div class="container">
+
+        <div class="card">
+
+            <h1>
+                Scan Attendance QR
+            </h1>
+
+            <p>
+                Ask your teacher to generate the
+                attendance QR code and scan it using
+                your camera.
+            </p>
+
+
+            <!-- QR Scanner -->
+
+            <div id="reader"></div>
+
+
+            <div
+                id="message"
+                class="message"
+            >
+                Waiting for QR code...
+            </div>
+
+
+            <a
+                href="/student-dashboard/{{ session['student_id'] }}"
+                class="dashboard-btn"
+            >
+                Back to Dashboard
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        function onScanSuccess(
+            decodedText,
+            decodedResult
+        ) {
+
+            document.getElementById(
+                "message"
+            ).innerText =
+                "QR detected! Opening attendance...";
+
+
+            /*
+             * Stop scanner after successful scan
+             */
+
+            html5QrcodeScanner.clear().then(
+                function() {
+
+                    window.location.href =
+                        decodedText;
+
+                }
+            ).catch(
+                function(error) {
+
+                    window.location.href =
+                        decodedText;
+
+                }
+            );
+        }
+
+
+        function onScanFailure(error) {
+
+            /*
+             * Ignore continuous scanner errors.
+             */
+
+        }
+
+
+        const html5QrcodeScanner =
+            new Html5QrcodeScanner(
+                "reader",
+                {
+                    fps: 10,
+                    qrbox: {
+                        width: 250,
+                        height: 250
+                    }
+                },
+                false
+            );
+
+
+        html5QrcodeScanner.render(
+            onScanSuccess,
+            onScanFailure
+        );
+
+    </script>
+
+</body>
+
+</html>
+

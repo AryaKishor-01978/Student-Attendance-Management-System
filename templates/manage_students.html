@@ -3,6 +3,7 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -69,7 +70,7 @@
 
         .container {
             width: 90%;
-            max-width: 1250px;
+            max-width: 1350px;
             margin: 40px auto;
         }
 
@@ -112,6 +113,13 @@
             border: 1px solid #fde68a;
         }
 
+        .message.danger,
+        .message.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
         /* ================= ACTION CARD ================= */
 
         .action-card {
@@ -136,7 +144,7 @@
             display: flex;
             gap: 10px;
             flex: 1;
-            max-width: 650px;
+            max-width: 700px;
         }
 
         .search-box {
@@ -243,7 +251,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 1000px;
+            min-width: 1200px;
         }
 
         th {
@@ -315,6 +323,16 @@
 
         .username {
             color: #6b7280;
+        }
+
+        .phone {
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .not-available {
+            color: #9ca3af;
+            font-style: italic;
         }
 
         /* ================= ACTION BUTTONS ================= */
@@ -464,7 +482,9 @@
 
 </head>
 
+
 <body>
+
 
     <!-- ================= NAVBAR ================= -->
 
@@ -493,7 +513,8 @@
 
     <div class="container">
 
-        <!-- PAGE HEADER -->
+
+        <!-- ================= PAGE HEADER ================= -->
 
         <div class="page-header">
 
@@ -533,6 +554,7 @@
 
             <div class="action-row">
 
+
                 <!-- SEARCH -->
 
                 <form
@@ -547,10 +569,11 @@
                             type="text"
                             name="search"
                             placeholder="🔍 Search by name, roll number or username..."
-                            value="{{ search }}"
+                            value="{{ search or '' }}"
                         >
 
                     </div>
+
 
                     <button
                         type="submit"
@@ -558,6 +581,7 @@
                     >
                         Search
                     </button>
+
 
                     <a
                         href="/manage-students"
@@ -587,6 +611,7 @@
 
         <div class="student-card">
 
+
             <div class="card-header">
 
                 <h2>
@@ -602,9 +627,11 @@
 
             {% if students %}
 
+
             <div class="table-container">
 
                 <table>
+
 
                     <thead>
 
@@ -631,6 +658,10 @@
                             </th>
 
                             <th>
+                                Phone
+                            </th>
+
+                            <th>
                                 Actions
                             </th>
 
@@ -641,9 +672,11 @@
 
                     <tbody>
 
+
                         {% for student in students %}
 
                         <tr>
+
 
                             <!-- ================= PHOTO ================= -->
 
@@ -655,7 +688,15 @@
                                         src="{{ url_for('static', filename=student[5]) }}"
                                         alt="{{ student[3] }}"
                                         class="student-photo"
+                                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
                                     >
+
+                                    <div
+                                        class="no-photo"
+                                        style="display: none;"
+                                    >
+                                        👤
+                                    </div>
 
                                 {% else %}
 
@@ -712,11 +753,33 @@
                             </td>
 
 
+                            <!-- ================= PHONE ================= -->
+
+                            <td>
+
+                                {% if student[6] %}
+
+                                    <span class="phone">
+                                        {{ student[6] }}
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="not-available">
+                                        Not provided
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
                             <!-- ================= ACTIONS ================= -->
 
                             <td>
 
                                 <div class="actions">
+
 
                                     <a
                                         href="/edit-student/{{ student[0] }}"
@@ -724,6 +787,7 @@
                                     >
                                         ✏️ Edit
                                     </a>
+
 
                                     <a
                                         href="/delete-student/{{ student[0] }}"
@@ -733,13 +797,16 @@
                                         🗑️ Delete
                                     </a>
 
+
                                 </div>
 
                             </td>
 
+
                         </tr>
 
                         {% endfor %}
+
 
                     </tbody>
 
@@ -747,7 +814,9 @@
 
             </div>
 
+
             {% else %}
+
 
             <!-- ================= NO STUDENTS ================= -->
 
@@ -757,15 +826,18 @@
                     📭
                 </div>
 
+
                 <h3>
                     No Students Found
                 </h3>
+
 
                 <p>
 
                     {% if search %}
 
-                        No student matches your search "{{ search }}".
+                        No student matches your search
+                        "{{ search }}".
 
                     {% else %}
 
@@ -796,11 +868,15 @@
 
                 {% endif %}
 
+
             </div>
+
 
             {% endif %}
 
+
         </div>
+
 
     </div>
 
@@ -817,6 +893,7 @@
     <!-- ================= CHATBOT ================= -->
 
     {% include 'chatbot_widget.html' %}
+
 
 </body>
 

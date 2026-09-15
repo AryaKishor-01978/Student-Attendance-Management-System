@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>QR Attendance</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #eef2ff,
+                    #f8fafc
+                );
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            padding: 30px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+
+            background: white;
+
+            border-radius: 20px;
+
+            padding: 35px;
+
+            text-align: center;
+
+            box-shadow:
+                0 15px 40px
+                rgba(0, 0, 0, 0.12);
+        }
+
+        h1 {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 25px;
+        }
+
+        .date-box {
+            background: #f1f5f9;
+
+            padding: 12px;
+
+            border-radius: 10px;
+
+            margin-bottom: 25px;
+
+            font-size: 16px;
+        }
+
+        .qr-box {
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+
+            margin: 20px 0;
+        }
+
+        .qr-box img {
+            width: 300px;
+            height: 300px;
+
+            max-width: 100%;
+
+            border: 8px solid white;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 8px 25px
+                rgba(0, 0, 0, 0.15);
+        }
+
+        .timer-title {
+            margin-top: 20px;
+
+            color: #475569;
+
+            font-size: 15px;
+        }
+
+        #timer {
+            font-size: 36px;
+
+            font-weight: bold;
+
+            margin-top: 5px;
+        }
+
+        .warning {
+            margin-top: 15px;
+
+            padding: 12px;
+
+            border-radius: 10px;
+
+            background: #fff7ed;
+
+            color: #c2410c;
+
+            display: none;
+        }
+
+        .expired {
+            color: #dc2626;
+        }
+
+        .back-button {
+            display: inline-block;
+
+            margin-top: 25px;
+
+            padding: 12px 22px;
+
+            border-radius: 10px;
+
+            background: #334155;
+
+            color: white;
+
+            text-decoration: none;
+
+            font-weight: bold;
+        }
+
+        .back-button:hover {
+            background: #1e293b;
+        }
+
+        .instruction {
+            margin-top: 20px;
+
+            color: #64748b;
+
+            line-height: 1.6;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="container">
+
+        <h1>
+            📱 QR Attendance
+        </h1>
+
+        <p class="subtitle">
+            Students can scan this QR code
+            to mark their attendance.
+        </p>
+
+
+        <div class="date-box">
+
+            <strong>
+                Attendance Date:
+            </strong>
+
+            {{ attendance_date }}
+
+        </div>
+
+
+        <div class="qr-box">
+
+            <img
+                src="data:image/png;base64,{{ qr_image }}"
+                alt="Attendance QR Code"
+            >
+
+        </div>
+
+
+        <div class="timer-title">
+
+            QR code expires in
+
+        </div>
+
+
+        <div id="timer">
+            {{ expiry_minutes }}:00
+        </div>
+
+
+        <div
+            id="warning"
+            class="warning"
+        >
+
+            ⚠️ This QR code has expired.
+            Please generate a new QR code.
+
+        </div>
+
+
+        <p class="instruction">
+
+            Ask students to log in to their
+            Student Portal and scan this QR code.
+
+            <br>
+
+            Attendance will automatically be
+            marked as <strong>Present</strong>.
+
+        </p>
+
+
+        <a
+            href="/teacher-dashboard"
+            class="back-button"
+        >
+            ← Back to Teacher Dashboard
+        </a>
+
+    </div>
+
+
+    <script>
+
+        let expiryTime =
+            new Date(
+                "{{ expires_at }}"
+                    .replace(" ", "T")
+            ).getTime();
+
+
+        const timer =
+            document.getElementById(
+                "timer"
+            );
+
+
+        const warning =
+            document.getElementById(
+                "warning"
+            );
+
+
+        function updateTimer() {
+
+            const now =
+                new Date().getTime();
+
+
+            const difference =
+                expiryTime - now;
+
+
+            if (difference <= 0) {
+
+                timer.innerText =
+                    "EXPIRED";
+
+                timer.classList.add(
+                    "expired"
+                );
+
+                warning.style.display =
+                    "block";
+
+                return;
+
+            }
+
+
+            const totalSeconds =
+                Math.floor(
+                    difference / 1000
+                );
+
+
+            const minutes =
+                Math.floor(
+                    totalSeconds / 60
+                );
+
+
+            const seconds =
+                totalSeconds % 60;
+
+
+            timer.innerText =
+                minutes +
+                ":" +
+                String(seconds)
+                    .padStart(2, "0");
+
+
+            setTimeout(
+                updateTimer,
+                1000
+            );
+
+        }
+
+
+        updateTimer();
+
+    </script>
+
+</body>
+
+</html>

@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -120,12 +121,12 @@
             font-size: 14px;
         }
 
-        /* ================= EDIT PROFILE BUTTON ================= */
+        /* ================= QR BUTTON ================= */
 
-        .edit-profile-btn {
+        .qr-attendance-btn {
             display: inline-block;
             margin-top: 20px;
-            padding: 11px 18px;
+            padding: 12px 20px;
             background: white;
             color: #1e3a8a;
             text-decoration: none;
@@ -136,7 +137,7 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
-        .edit-profile-btn:hover {
+        .qr-attendance-btn:hover {
             background: #eff6ff;
             transform: translateY(-2px);
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.20);
@@ -444,7 +445,7 @@
                 padding: 20px;
             }
 
-            .edit-profile-btn {
+            .qr-attendance-btn {
                 width: 100%;
                 text-align: center;
             }
@@ -516,13 +517,13 @@
                     </div>
 
 
-                    <!-- ================= EDIT PROFILE BUTTON ================= -->
+                    <!-- ================= QR ATTENDANCE ================= -->
 
                     <a
-                        href="{{ url_for('student_profile', student_id=student[0]) }}"
-                        class="edit-profile-btn"
+                        href="/student-qr-scan"
+                        class="qr-attendance-btn"
                     >
-                        ✏️ Edit Profile
+                        📱 Scan QR Attendance
                     </a>
 
                 </div>
@@ -763,11 +764,6 @@
             </div>
 
 
-            <!-- IMPORTANT:
-                 app.py sends attendance_history,
-                 NOT attendance
-            -->
-
             {% if attendance_history %}
 
                 <table>
@@ -875,3 +871,4 @@
 </body>
 
 </html>
+```
