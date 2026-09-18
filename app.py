@@ -12,12 +12,17 @@ from flask import (
 from database import get_db_connection
 
 from datetime import date, datetime, timedelta
+from math import radians, sin, cos, sqrt, atan2
 
 import os
+import requests
+import random
+from dotenv import load_dotenv
 import uuid
 import secrets
 import base64
-from io import BytesIO
+import csv
+from io import BytesIO, StringIO
 
 import qrcode
 
@@ -31,8 +36,24 @@ from werkzeug.utils import secure_filename
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 app = Flask(__name__)
+load_dotenv()
 
 app.secret_key = "attendance-system-secret-key"
+# =========================================================
+# MESSAGE CENTRAL OTP SETTINGS
+# =========================================================
+
+MESSAGE_CENTRAL_BASE_URL = (
+    "https://cpaas.messagecentral.com"
+)
+
+MESSAGE_CENTRAL_CUSTOMER_ID = os.getenv(
+    "MESSAGE_CENTRAL_CUSTOMER_ID"
+)
+
+MESSAGE_CENTRAL_AUTH_TOKEN = os.getenv(
+    "MESSAGE_CENTRAL_AUTH_TOKEN"
+)
 
 
 # =========================================================
@@ -65,6 +86,35 @@ os.makedirs(
 # =========================================================
 
 QR_EXPIRY_MINUTES = 2
+def calculate_distance(lat1, lon1, lat2, lon2):
+    """
+    Calculate distance between two GPS coordinates in meters
+    using the Haversine formula.
+    """
+
+    R = 6371000  # Earth radius in meters
+
+    lat1 = radians(float(lat1))
+    lon1 = radians(float(lon1))
+    lat2 = radians(float(lat2))
+    lon2 = radians(float(lon2))
+
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+
+    a = (
+        sin(dlat / 2) ** 2
+        + cos(lat1)
+        * cos(lat2)
+        * sin(dlon / 2) ** 2
+    )
+
+    c = 2 * atan2(
+        sqrt(a),
+        sqrt(1 - a)
+    )
+
+    return R * c
 
 
 # =========================================================
@@ -508,9 +558,85 @@ def generate_qr():
     # Attendance date
     # -----------------------------------------------------
 
-    attendance_date = request.form.get(
-        "attendance_date"
+    attendance_date = request.form.get( 
+        "attendance_date" 
     )
+
+    teacher_latitude = request.form.get(
+        "latitude"
+    )
+
+    teacher_longitude = request.form.get(
+        "longitude"
+    )
+
+    radius = request.form.get(
+        "radius",
+        "100"
+    )
+
+
+    try:
+
+        teacher_latitude = float(
+            teacher_latitude
+        )
+
+        teacher_longitude = float(
+            teacher_longitude
+        )
+
+        radius = float(
+            radius
+        )
+
+        if not (
+            -90 <= teacher_latitude <= 90
+        ):
+            raise ValueError
+
+        if not (
+            -180 <= teacher_longitude <= 180
+        ):
+            raise ValueError
+
+        if radius <= 0:
+            raise ValueError
+
+    except (TypeError, ValueError):
+
+        flash(
+            "Please provide a valid location and radius."
+        )
+
+        return redirect(
+            "/teacher-dashboard"
+        )
+        
+
+        if not (
+            -90 <= teacher_latitude <= 90
+        ):
+            raise ValueError
+
+        if not (
+            -180 <= teacher_longitude <= 180
+        ):
+            raise ValueError
+
+        if radius <= 0:
+            raise ValueError
+
+    except (TypeError, ValueError):
+
+        flash(
+            "Please provide a valid location and radius."
+        )
+
+        return redirect(
+            "/teacher-dashboard"
+        )
+
 
     if not attendance_date:
 
@@ -574,7 +700,10 @@ def generate_qr():
                 session_token,
                 created_at,
                 expires_at,
-                is_active
+                is_active,
+                latitude,
+                longitude,
+                radius
             )
             VALUES
             (
@@ -583,7 +712,10 @@ def generate_qr():
                 %s,
                 %s,
                 %s,
-                TRUE
+                TRUE,
+                %s,
+                %s,
+                %s
             )
             """,
             (
@@ -591,7 +723,10 @@ def generate_qr():
                 attendance_date,
                 session_token,
                 created_at,
-                expires_at
+                expires_at,
+                teacher_latitude,
+                teacher_longitude,
+                radius
             )
         )
 
@@ -1269,7 +1404,572 @@ def add_student():
         "add_student.html"
     )
 
+# =========================================================
+# SEND OTP
+# =========================================================
 
+@app.route(
+    "/send-otp",
+    methods=["POST"]
+)
+def send_otp():
+
+    phone_number = request.form.get(
+        "phone_number",
+        ""
+    ).strip()
+
+
+    # -----------------------------------------------------
+    # Validate phone number
+    # -----------------------------------------------------
+
+    if (
+        len(phone_number) != 10
+        or
+        not phone_number.isdigit()
+        or
+        phone_number[0] not in "6789"
+    ):
+
+        return jsonify(
+            {
+                "success": False,
+                "message":
+                    "Please enter a valid 10-digit Indian mobile number."
+            }
+        ), 400
+
+
+    # -----------------------------------------------------
+    # Check Message Central configuration
+    # -----------------------------------------------------
+
+    if not MESSAGE_CENTRAL_CUSTOMER_ID:
+
+        print(
+            "ERROR: MESSAGE_CENTRAL_CUSTOMER_ID is missing."
+        )
+
+        return jsonify(
+            {
+                "success": False,
+                "message":
+                    "Message Central Customer ID is not configured."
+            }
+        ), 500
+
+
+    if not MESSAGE_CENTRAL_AUTH_TOKEN:
+
+        print(
+            "ERROR: MESSAGE_CENTRAL_AUTH_TOKEN is missing."
+        )
+
+        return jsonify(
+            {
+                "success": False,
+                "message":
+                    "Message Central Auth Token is not configured."
+            }
+        ), 500
+
+
+    # -----------------------------------------------------
+    # Message Central Send OTP API
+    # -----------------------------------------------------
+
+    try:
+
+        url = (
+            MESSAGE_CENTRAL_BASE_URL
+            +
+            "/verification/v3/send"
+        )
+
+
+        params = {
+
+            "countryCode": "91",
+
+            "customerId":
+                MESSAGE_CENTRAL_CUSTOMER_ID,
+
+            "otpLength": 6,
+
+            "mobileNumber":
+                phone_number,
+
+            "flowType": "SMS"
+        }
+
+
+        headers = {
+
+            "authToken":
+                MESSAGE_CENTRAL_AUTH_TOKEN,
+
+            "accept": "*/*"
+        }
+
+
+        response = requests.post(
+
+            url,
+
+            params=params,
+
+            headers=headers,
+
+            timeout=20
+        )
+
+
+        print(
+            "Message Central Send OTP status:",
+            response.status_code
+        )
+
+        print(
+            "Message Central Send OTP response:",
+            response.text
+        )
+
+
+        # -------------------------------------------------
+        # Parse response
+        # -------------------------------------------------
+
+        try:
+
+            data = response.json()
+
+        except ValueError:
+
+            data = {}
+
+
+        # -------------------------------------------------
+        # Check successful response
+        # -------------------------------------------------
+
+        if response.status_code == 200:
+
+            response_code = str(
+                data.get(
+                    "responseCode",
+                    ""
+                )
+            )
+
+
+            response_data = data.get(
+                "data",
+                {}
+            )
+
+
+            verification_id = (
+                response_data.get(
+                    "verificationId"
+                )
+            )
+
+
+            if (
+                response_code == "200"
+                and
+                verification_id
+            ):
+
+                # Save verification ID in session
+
+                session[
+                    "otp_verification_id"
+                ] = str(
+                    verification_id
+                )
+
+                session[
+                    "otp_phone_number"
+                ] = phone_number
+
+
+                return jsonify(
+                    {
+                        "success": True,
+
+                        "message":
+                            "OTP sent successfully."
+                    }
+                )
+
+
+        # -------------------------------------------------
+        # API returned an error
+        # -------------------------------------------------
+
+        error_message = (
+            data.get("message")
+            or
+            data.get("errorMessage")
+            or
+            "Unable to send OTP."
+        )
+
+
+        return jsonify(
+            {
+                "success": False,
+
+                "message":
+                    str(error_message)
+            }
+        ), 400
+
+
+    except requests.exceptions.RequestException as e:
+
+        print(
+            "Message Central request error:",
+            e
+        )
+
+
+        return jsonify(
+            {
+                "success": False,
+
+                "message":
+                    "Unable to connect to OTP service."
+            }
+        ), 500
+
+
+    except Exception as e:
+
+        print(
+            "Send OTP error:",
+            e
+        )
+
+
+        return jsonify(
+            {
+                "success": False,
+
+                "message":
+                    "Something went wrong while sending OTP."
+            }
+        ), 500
+# =========================================================
+# VERIFY OTP
+# =========================================================
+
+@app.route(
+    "/verify-otp",
+    methods=["POST"]
+)
+def verify_otp():
+
+    phone_number = request.form.get(
+        "phone_number",
+        ""
+    ).strip()
+
+    otp = request.form.get(
+        "otp",
+        ""
+    ).strip()
+
+
+    # -----------------------------------------------------
+    # Validate input
+    # -----------------------------------------------------
+
+    if (
+        len(phone_number) != 10
+        or
+        not phone_number.isdigit()
+    ):
+
+        return jsonify(
+            {
+                "success": False,
+                "message":
+                    "Invalid mobile number."
+            }
+        ), 400
+
+
+    if (
+        not otp
+        or
+        not otp.isdigit()
+        or
+        not 4 <= len(otp) <= 8
+    ):
+
+        return jsonify(
+            {
+                "success": False,
+                "message":
+                    "Please enter a valid OTP."
+            }
+        ), 400
+
+
+    # -----------------------------------------------------
+    # Get verification ID
+    # -----------------------------------------------------
+
+    verification_id = session.get(
+        "otp_verification_id"
+    )
+
+    otp_phone_number = session.get(
+        "otp_phone_number"
+    )
+
+
+    if not verification_id:
+
+        return jsonify(
+            {
+                "success": False,
+                "message":
+                    "Please request a new OTP first."
+            }
+        ), 400
+
+
+    # -----------------------------------------------------
+    # Make sure OTP belongs to same number
+    # -----------------------------------------------------
+
+    if otp_phone_number != phone_number:
+
+        return jsonify(
+            {
+                "success": False,
+                "message":
+                    "Phone number changed. Please request a new OTP."
+            }
+        ), 400
+
+
+    # -----------------------------------------------------
+    # Check Message Central configuration
+    # -----------------------------------------------------
+
+    if not MESSAGE_CENTRAL_AUTH_TOKEN:
+
+        return jsonify(
+            {
+                "success": False,
+                "message":
+                    "Message Central Auth Token is not configured."
+            }
+        ), 500
+
+
+    # -----------------------------------------------------
+    # Message Central Validate OTP API
+    # -----------------------------------------------------
+
+    try:
+
+        url = (
+            MESSAGE_CENTRAL_BASE_URL
+            +
+            "/verification/v3/validateOtp"
+        )
+
+
+        params = {
+
+            "verificationId":
+                verification_id,
+
+            "code":
+                otp
+        }
+
+
+        headers = {
+
+            "authToken":
+                MESSAGE_CENTRAL_AUTH_TOKEN,
+
+            "accept": "*/*"
+        }
+
+
+        response = requests.get(
+
+            url,
+
+            params=params,
+
+            headers=headers,
+
+            timeout=20
+        )
+
+
+        print(
+            "Message Central Verify OTP status:",
+            response.status_code
+        )
+
+        print(
+            "Message Central Verify OTP response:",
+            response.text
+        )
+
+
+        try:
+
+            data = response.json()
+
+        except ValueError:
+
+            data = {}
+
+
+        response_data = data.get(
+            "data",
+            {}
+        )
+
+
+        verification_status = str(
+            response_data.get(
+                "verificationStatus",
+                ""
+            )
+        ).upper()
+
+
+        response_code = str(
+            data.get(
+                "responseCode",
+                ""
+            )
+        )
+
+
+        # -------------------------------------------------
+        # Successful verification
+        # -------------------------------------------------
+
+        if (
+            response.status_code == 200
+            and
+            (
+                verification_status
+                in [
+                    "VERIFICATION_COMPLETED",
+                    "VERIFIED"
+                ]
+                or
+                response_code == "200"
+            )
+        ):
+
+            # Mark phone as verified
+
+            session[
+                "phone_verified"
+            ] = True
+
+            session[
+                "verified_phone_number"
+            ] = phone_number
+
+
+            # Remove temporary OTP information
+
+            session.pop(
+                "otp_verification_id",
+                None
+            )
+
+            session.pop(
+                "otp_phone_number",
+                None
+            )
+
+
+            return jsonify(
+                {
+                    "success": True,
+
+                    "message":
+                        "Phone number verified successfully!"
+                }
+            )
+
+
+        # -------------------------------------------------
+        # Invalid OTP
+        # -------------------------------------------------
+
+        error_message = (
+            data.get("message")
+            or
+            response_data.get(
+                "errorMessage"
+            )
+            or
+            "Invalid OTP."
+        )
+
+
+        return jsonify(
+            {
+                "success": False,
+
+                "message":
+                    str(error_message)
+            }
+        ), 400
+
+
+    except requests.exceptions.RequestException as e:
+
+        print(
+            "Message Central verification error:",
+            e
+        )
+
+
+        return jsonify(
+            {
+                "success": False,
+
+                "message":
+                    "Unable to connect to OTP service."
+            }
+        ), 500
+
+
+    except Exception as e:
+
+        print(
+            "Verify OTP error:",
+            e
+        )
+
+
+        return jsonify(
+            {
+                "success": False,
+
+                "message":
+                    "Something went wrong while verifying OTP."
+            }
+        ), 500    
 # =========================================================
 # STUDENT SELF REGISTRATION
 # WITH FACE PHOTO
@@ -1311,6 +2011,11 @@ def student_register():
             "confirm_password",
             ""
         ).strip()
+        
+        phone_number = request.form.get(
+            "phone_number",
+            ""
+        ).strip()
 
 
         # -------------------------------------------------
@@ -1332,6 +2037,7 @@ def student_register():
             or not username
             or not password
             or not confirm_password
+            or not phone_number
         ):
 
             flash(
@@ -1342,7 +2048,23 @@ def student_register():
                 "/student-register"
             )
 
+        # -------------------------------------------------
+        # OTP verification check
+        # -------------------------------------------------
 
+        if (
+            not session.get("phone_verified")
+            or session.get("verified_phone_number") != phone_number
+        ):
+
+            flash(
+                "Please verify your mobile number with OTP before registering."
+            )
+
+            return redirect(
+                "/student-register"
+            )
+        
         # -------------------------------------------------
         # Password check
         # -------------------------------------------------
@@ -1532,10 +2254,12 @@ def student_register():
                     password,
                     name,
                     roll_no,
+                    phone_number,
                     face_image
                 )
                 VALUES
                 (
+                    %s,
                     %s,
                     %s,
                     %s,
@@ -1548,12 +2272,29 @@ def student_register():
                     password,
                     name,
                     roll_no,
+                    phone_number,
                     image_path
                 )
             )
 
 
             connection.commit()
+
+            session.pop(
+                "phone_verified",
+                None
+            )
+
+            session.pop(
+                "verified_phone_number",
+                None
+            )
+
+            flash(
+                "Registration successful! "
+                "You can now login."
+            )
+        
 
 
             flash(
@@ -2261,6 +3002,368 @@ def attendance_report():
         present_count=present_count,
         absent_count=absent_count
     )
+
+# =========================================================
+# EXPORT ATTENDANCE REPORT - CSV
+# =========================================================
+
+@app.route("/export-attendance")
+def export_attendance():
+
+    if "teacher_id" not in session:
+
+        flash(
+            "Please login as teacher first."
+        )
+
+        return redirect(
+            "/teacher-login"
+        )
+
+
+    selected_date = request.args.get(
+        "date",
+        ""
+    ).strip()
+
+
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+
+    try:
+
+        # -------------------------------------------------
+        # Get attendance records
+        # -------------------------------------------------
+
+        if selected_date:
+
+            cursor.execute(
+                """
+                SELECT
+                    s.name,
+                    s.roll_no,
+                    s.username,
+                    s.phone_number,
+                    a.date,
+                    a.status
+                FROM attendance a
+                JOIN students s
+                    ON a.student_id = s.id
+                WHERE a.date = %s
+                ORDER BY a.date DESC, s.roll_no
+                """,
+                (selected_date,)
+            )
+
+        else:
+
+            cursor.execute(
+                """
+                SELECT
+                    s.name,
+                    s.roll_no,
+                    s.username,
+                    s.phone_number,
+                    a.date,
+                    a.status
+                FROM attendance a
+                JOIN students s
+                    ON a.student_id = s.id
+                ORDER BY a.date DESC, s.roll_no
+                """
+            )
+
+
+        records = cursor.fetchall()
+
+
+        # -------------------------------------------------
+        # Create CSV
+        # -------------------------------------------------
+
+        output = StringIO()
+
+        writer = csv.writer(
+            output
+        )
+
+
+        # Header
+
+        writer.writerow(
+            [
+                "Student Name",
+                "Roll Number",
+                "Username",
+                "Phone Number",
+                "Date",
+                "Status"
+            ]
+        )
+
+
+        # Data
+
+        for record in records:
+
+            writer.writerow(
+                [
+                    record[0],
+                    record[1],
+                    record[2],
+                    record[3],
+                    record[4],
+                    record[5]
+                ]
+            )
+
+
+        csv_data = output.getvalue()
+
+        output.close()
+
+
+        # -------------------------------------------------
+        # Filename
+        # -------------------------------------------------
+
+        if selected_date:
+
+            filename = (
+                "attendance_report_"
+                + selected_date
+                + ".csv"
+            )
+
+        else:
+
+            filename = (
+                "attendance_report_all.csv"
+            )
+
+
+        # -------------------------------------------------
+        # Return CSV file
+        # -------------------------------------------------
+
+        response = app.response_class(
+            csv_data,
+            mimetype="text/csv"
+        )
+
+
+        response.headers[
+            "Content-Disposition"
+        ] = (
+            "attachment; filename="
+            + filename
+        )
+
+
+        return response
+
+
+    except Exception as e:
+
+        print(
+            "Attendance export error:",
+            e
+        )
+
+
+        flash(
+            "Unable to generate attendance export."
+        )
+
+
+        return redirect(
+            "/attendance-report"
+        )
+
+
+    finally:
+
+        cursor.close()
+        connection.close()
+
+# =========================================================
+# EXPORT STUDENT-WISE ATTENDANCE SUMMARY - CSV
+# =========================================================
+
+@app.route("/export-student-summary")
+def export_student_summary():
+
+    if "teacher_id" not in session:
+
+        flash(
+            "Please login as teacher first."
+        )
+
+        return redirect(
+            "/teacher-login"
+        )
+
+
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+
+    try:
+
+        # -------------------------------------------------
+        # Get student-wise attendance summary
+        # -------------------------------------------------
+
+        cursor.execute(
+            """
+            SELECT
+                s.name,
+                s.roll_no,
+                COUNT(a.id) AS total_classes,
+                SUM(
+                    CASE
+                        WHEN a.status = 'Present'
+                        THEN 1
+                        ELSE 0
+                    END
+                ) AS present_classes
+            FROM students s
+            LEFT JOIN attendance a
+                ON s.id = a.student_id
+            GROUP BY
+                s.id,
+                s.name,
+                s.roll_no
+            ORDER BY
+                s.roll_no
+            """
+        )
+
+
+        records = cursor.fetchall()
+
+
+        # -------------------------------------------------
+        # Create CSV
+        # -------------------------------------------------
+
+        output = StringIO()
+
+        writer = csv.writer(
+            output
+        )
+
+
+        # -------------------------------------------------
+        # CSV Header
+        # -------------------------------------------------
+
+        writer.writerow(
+            [
+                "Student Name",
+                "Roll Number",
+                "Total Classes",
+                "Present",
+                "Absent",
+                "Attendance Percentage"
+            ]
+        )
+
+
+        # -------------------------------------------------
+        # Add student records
+        # -------------------------------------------------
+
+        for record in records:
+
+            student_name = record[0]
+
+            roll_no = record[1]
+
+            total_classes = record[2] or 0
+
+            present_classes = record[3] or 0
+
+            absent_classes = (
+                total_classes
+                - present_classes
+            )
+
+
+            if total_classes > 0:
+
+                percentage = (
+                    present_classes
+                    / total_classes
+                ) * 100
+
+            else:
+
+                percentage = 0
+
+
+            writer.writerow(
+                [
+                    student_name,
+                    roll_no,
+                    total_classes,
+                    present_classes,
+                    absent_classes,
+                    f"{percentage:.2f}%"
+                ]
+            )
+
+
+        csv_data = output.getvalue()
+
+        output.close()
+
+
+        # -------------------------------------------------
+        # Return CSV
+        # -------------------------------------------------
+
+        response = app.response_class(
+            csv_data,
+            mimetype="text/csv"
+        )
+
+
+        response.headers[
+            "Content-Disposition"
+        ] = (
+            "attachment; "
+            "filename=student_attendance_summary.csv"
+        )
+
+
+        return response
+
+
+    except Exception as e:
+
+        print(
+            "Student summary export error:",
+            e
+        )
+
+
+        flash(
+            "Unable to generate student summary export."
+        )
+
+
+        return redirect(
+            "/teacher-dashboard"
+        )
+
+
+    finally:
+
+        cursor.close()
+        connection.close()
 
 # =========================================================
 # STUDENT LOGIN

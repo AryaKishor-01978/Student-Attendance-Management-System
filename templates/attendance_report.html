@@ -158,10 +158,30 @@
             color: #3730a3;
         }
 
+        .btn-export {
+            background: #198754;
+            color: white;
+        }
+
+        .btn-export:hover {
+            background: #157347;
+            transform: translateY(-1px);
+        }
+
         .btn-secondary:hover {
             background: #e0e7ff;
         }
 
+        .btn-summary-export {
+            background: #7c3aed;
+            color: white;
+        }
+
+        .btn-summary-export:hover {
+            background: #6d28d9;
+            transform: translateY(-1px);
+        }
+        
         /* SUMMARY CARDS */
 
         .summary {
@@ -461,20 +481,37 @@
                 </div>
 
 
-                <button
-                    type="submit"
-                    class="btn btn-primary"
-                >
-                    View Report
-                </button>
+                <button 
+                type="submit" 
+                class="btn btn-primary" 
+            > 
+                View Report 
+            </button>
+            
+            
+            <a 
+                href="/attendance-report" 
+                class="btn btn-secondary" 
+            > 
+                Show All 
+            </a>
+            
+            
+            <a
+                href="/export-attendance{% if selected_date %}?date={{ selected_date }}{% endif %}"
+                class="btn btn-export"
+            >
+                📥 Export CSV
+            </a>
 
 
-                <a
-                    href="/attendance-report"
-                    class="btn btn-secondary"
-                >
-                    Show All
-                </a>
+            <a
+                href="/export-student-summary"
+                class="btn btn-summary-export"
+            >
+                📊 Student Summary
+            </a>
+                
 
             </form>
 
